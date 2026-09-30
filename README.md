@@ -44,20 +44,20 @@ A portfolio project by **WDNusantara** that demonstrates technical email develop
 
 ## 2. Tech stack and cost
 
-| Concern | Choice | Cost |
-|---|---|---|
-| Framework | Next.js (App Router), React, TypeScript (strict) | Free |
-| Styling (site only) | Tailwind CSS | Free |
-| Hosting | Vercel Hobby (personal, non-commercial use) | Free |
-| Sending | Resend free plan behind an `EmailSender` port | Free (verify current limits at sign-up; listed at 3,000/month and 100/day) |
-| Bot protection | Cloudflare Turnstile | Free |
-| Rate limiting | Upstash Redis free tier | Free (verify limits) |
-| Validation | `zod` | Free |
-| Logging | `pino` (structured JSON) | Free |
-| Email build | Node scripts, `juice` (CSS inlining), `html-to-text` | Free |
-| Tests | Vitest, Playwright, `@axe-core/playwright` | Free |
-| CI | GitHub Actions (free for public repositories) | Free |
-| Domain | `wdnusantara.my.id` (already owned) | Already paid |
+| Concern             | Choice                                               | Cost                                                                       |
+| ------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------- |
+| Framework           | Next.js (App Router), React, TypeScript (strict)     | Free                                                                       |
+| Styling (site only) | Tailwind CSS                                         | Free                                                                       |
+| Hosting             | Vercel Hobby (personal, non-commercial use)          | Free                                                                       |
+| Sending             | Resend free plan behind an `EmailSender` port        | Free (verify current limits at sign-up; listed at 3,000/month and 100/day) |
+| Bot protection      | Cloudflare Turnstile                                 | Free                                                                       |
+| Rate limiting       | Upstash Redis free tier                              | Free (verify limits)                                                       |
+| Validation          | `zod`                                                | Free                                                                       |
+| Logging             | `pino` (structured JSON)                             | Free                                                                       |
+| Email build         | Node scripts, `juice` (CSS inlining), `html-to-text` | Free                                                                       |
+| Tests               | Vitest, Playwright, `@axe-core/playwright`           | Free                                                                       |
+| CI                  | GitHub Actions (free for public repositories)        | Free                                                                       |
+| Domain              | `wdnusantara.my.id` (already owned)                  | Already paid                                                               |
 
 Pin exact dependency versions in `package.json` and commit the lockfile. Free-tier limits change, so re-check them when you sign up.
 
@@ -87,12 +87,12 @@ The project follows **Clean Architecture**. Source code dependencies point inwar
 
 ### 3.1 The dependency rule
 
-| Layer | May import | Must not import |
-|---|---|---|
-| `domain` | nothing (pure TypeScript) | everything else, including `zod`, Node APIs, frameworks |
-| `application` | `domain` | `infrastructure`, `presentation`, Next.js, vendor SDKs |
-| `infrastructure` | `application`, `domain`, vendor SDKs | `presentation` |
-| `presentation` (`src/app`, `src/presentation`) | `application`, `domain`, and the composition root | vendor SDKs directly, business rules |
+| Layer                                          | May import                                        | Must not import                                         |
+| ---------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------- |
+| `domain`                                       | nothing (pure TypeScript)                         | everything else, including `zod`, Node APIs, frameworks |
+| `application`                                  | `domain`                                          | `infrastructure`, `presentation`, Next.js, vendor SDKs  |
+| `infrastructure`                               | `application`, `domain`, vendor SDKs              | `presentation`                                          |
+| `presentation` (`src/app`, `src/presentation`) | `application`, `domain`, and the composition root | vendor SDKs directly, business rules                    |
 
 The rule is **enforced in CI** with `dependency-cruiser` (or `eslint-plugin-boundaries`). A violation fails the build. Run it locally with `pnpm arch:check`.
 
@@ -185,13 +185,13 @@ Result<SendReceipt, SendTestError>   →  mapped to HTTP status + problem detail
 
 ## 4. SOLID in this codebase
 
-| Principle | How it is applied here | Where to look |
-|---|---|---|
-| **S**ingle Responsibility | Each class has one reason to change. `ResendEmailSender` only talks to Resend. `MergeTagRenderer` only substitutes values. `SendTestEmail` only orchestrates the send flow. Route handlers only translate HTTP. | `src/application/use-cases`, `src/infrastructure/*` |
-| **O**pen/Closed | New behaviour is added by **adding** code. A new email lint rule is a new class in the rule list. A new build step is a new `BuildStep`. A new sender (for example Brevo) is a new `EmailSender` adapter. No existing class is edited. | `emails/build/lint`, `emails/build/steps`, `src/infrastructure/email` |
-| **L**iskov Substitution | Every adapter honours its port's contract, including error behaviour. The same **contract test suite** runs against the in-memory and real adapters, so any implementation can replace another without the use case noticing. | `tests/contract` |
-| **I**nterface Segregation | Ports are small and role-specific: `EmailSender` has one method, `RateLimiter` has one, `BotVerifier` has one. No "god" `EmailService`. Use cases depend only on the ports they use. | `src/application/ports` |
-| **D**ependency Inversion | High-level policy (`application`) owns the interfaces; low-level details (`infrastructure`) implement them. Dependencies are injected through constructors and wired in one composition root. | `src/infrastructure/container.ts` |
+| Principle                 | How it is applied here                                                                                                                                                                                                                 | Where to look                                                         |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| **S**ingle Responsibility | Each class has one reason to change. `ResendEmailSender` only talks to Resend. `MergeTagRenderer` only substitutes values. `SendTestEmail` only orchestrates the send flow. Route handlers only translate HTTP.                        | `src/application/use-cases`, `src/infrastructure/*`                   |
+| **O**pen/Closed           | New behaviour is added by **adding** code. A new email lint rule is a new class in the rule list. A new build step is a new `BuildStep`. A new sender (for example Brevo) is a new `EmailSender` adapter. No existing class is edited. | `emails/build/lint`, `emails/build/steps`, `src/infrastructure/email` |
+| **L**iskov Substitution   | Every adapter honours its port's contract, including error behaviour. The same **contract test suite** runs against the in-memory and real adapters, so any implementation can replace another without the use case noticing.          | `tests/contract`                                                      |
+| **I**nterface Segregation | Ports are small and role-specific: `EmailSender` has one method, `RateLimiter` has one, `BotVerifier` has one. No "god" `EmailService`. Use cases depend only on the ports they use.                                                   | `src/application/ports`                                               |
+| **D**ependency Inversion  | High-level policy (`application`) owns the interfaces; low-level details (`infrastructure`) implement them. Dependencies are injected through constructors and wired in one composition root.                                          | `src/infrastructure/container.ts`                                     |
 
 ### 4.1 Port examples
 
@@ -212,7 +212,7 @@ export interface EmailSender {
 ```ts
 // src/application/ports/rate-limiter.ts
 export interface RateLimitRule {
-  readonly key: string;           // already hashed, never a raw email or IP
+  readonly key: string; // already hashed, never a raw email or IP
   readonly limit: number;
   readonly windowSeconds: number;
 }
@@ -260,13 +260,13 @@ export class SendTestEmail {
     private readonly sender: EmailSender,
     private readonly events: EventPublisher,
     private readonly hasher: IdentityHasher,
-    private readonly policy: SendPolicy,   // caps and kill switch, plain data
+    private readonly policy: SendPolicy, // caps and kill switch, plain data
   ) {}
 
   async execute(input: SendTestEmailInput): Promise<Result<SendReceipt, SendTestEmailError>> {
     if (!this.policy.sendingEnabled) return err(new SendingDisabledError());
 
-    const request = TestSendRequest.create(input);          // builds value objects
+    const request = TestSendRequest.create(input); // builds value objects
     if (!request.ok) return request;
 
     const human = await this.botVerifier.verify(input.botToken, input.clientIp);
@@ -278,7 +278,9 @@ export class SendTestEmail {
     const template = await this.templates.findById(request.value.templateId);
     if (!template) return err(new TemplateNotFoundError(request.value.templateId));
 
-    const rendered = this.renderer.render(template, { firstName: request.value.recipientName.value });
+    const rendered = this.renderer.render(template, {
+      firstName: request.value.recipientName.value,
+    });
     const sent = await this.sender.send({ to: request.value.email.value, ...rendered });
     if (!sent.ok) return sent;
 
@@ -286,7 +288,11 @@ export class SendTestEmail {
     return ok({ receiptId: sent.value.providerMessageId });
   }
 
-  private async enforceLimits(/* ... */): Promise<Result<void, RateLimitedError | DailyCapReachedError>> { /* ... */ }
+  private async enforceLimits(
+    /* ... */
+  ): Promise<Result<void, RateLimitedError | DailyCapReachedError>> {
+    /* ... */
+  }
 }
 ```
 
@@ -300,9 +306,10 @@ import { env } from "./config/env";
 
 export function createContainer() {
   const logger = new PinoLogger(env.LOG_LEVEL);
-  const sender: EmailSender = env.EMAIL_DRIVER === "resend"
-    ? new ResendEmailSender(env.RESEND_API_KEY, env.EMAIL_FROM, env.EMAIL_REPLY_TO)
-    : new ConsoleEmailSender(logger);
+  const sender: EmailSender =
+    env.EMAIL_DRIVER === "resend"
+      ? new ResendEmailSender(env.RESEND_API_KEY, env.EMAIL_FROM, env.EMAIL_REPLY_TO)
+      : new ConsoleEmailSender(logger);
 
   const sendTestEmail = new SendTestEmail(/* adapters chosen here */);
   return { sendTestEmail, listTemplates, getTemplate, logger };
@@ -319,15 +326,15 @@ Email source is **separate from the website** and has its own mini-architecture.
 
 Brand: **WDNusantara**. Warm, professional, Indonesian-rooted but not clichéd. Contrast ratios below were computed against WCAG 2.x; every pair passes AA (4.5:1 for normal text).
 
-| Token | Light | Dark | Contrast (light / dark) |
-|---|---|---|---|
-| `color.bg` | `#FFFFFF` | `#0F1614` | |
-| `color.surface` | `#F4EFE6` | `#18221F` | |
-| `color.text` | `#1B1F1E` | `#ECEFEA` | 16.65:1 on bg / 15.81:1 |
-| `color.muted` | `#555E5B` | `#A9B4AF` | 6.69:1 on bg, 5.84:1 on surface / 8.59:1 on bg, 7.64:1 on surface |
-| `color.primary` | `#0F4C45` | `#0F4C45` (buttons keep their fill) | white text on it: 9.81:1 |
-| `color.accent` | `#F2A93B` | `#F2A93B` | ink `#1B1F1E` text on it: 8.34:1 (dark ink `#10201C`: 8.44:1) |
-| `color.link` | `#0B6B61` | `#6FD6C8` | 6.38:1 on white / 10.59:1 on dark bg |
+| Token           | Light     | Dark                                | Contrast (light / dark)                                           |
+| --------------- | --------- | ----------------------------------- | ----------------------------------------------------------------- |
+| `color.bg`      | `#FFFFFF` | `#0F1614`                           |                                                                   |
+| `color.surface` | `#F4EFE6` | `#18221F`                           |                                                                   |
+| `color.text`    | `#1B1F1E` | `#ECEFEA`                           | 16.65:1 on bg / 15.81:1                                           |
+| `color.muted`   | `#555E5B` | `#A9B4AF`                           | 6.69:1 on bg, 5.84:1 on surface / 8.59:1 on bg, 7.64:1 on surface |
+| `color.primary` | `#0F4C45` | `#0F4C45` (buttons keep their fill) | white text on it: 9.81:1                                          |
+| `color.accent`  | `#F2A93B` | `#F2A93B`                           | ink `#1B1F1E` text on it: 8.34:1 (dark ink `#10201C`: 8.44:1)     |
+| `color.link`    | `#0B6B61` | `#6FD6C8`                           | 6.38:1 on white / 10.59:1 on dark bg                              |
 
 Type: system font stack with web-safe fallbacks (`Arial, Helvetica, sans-serif`), body 16 px, line height 1.5, headings 24 to 32 px. Spacing scale in 4 px steps. Content width 600 px.
 
@@ -335,25 +342,25 @@ Type: system font stack with web-safe fallbacks (`Arial, Helvetica, sans-serif`)
 
 Each component is a small HTML partial with documented parameters and a documented Outlook fallback. Templates compose components and never repeat their markup.
 
-| Component | Purpose |
-|---|---|
-| `header` | Logo (light and dark variants), preheader, view-in-browser link |
-| `hero` | Headline, supporting text, optional image with alt text |
-| `button` | "Bulletproof" button: HTML/CSS for modern clients, VML fallback for Outlook desktop, 44 px minimum height |
-| `content-block` | Heading plus paragraph, single column |
-| `post-list-item` | Avatar, title, meta (community digest) |
-| `event-card` | Date badge, title, location or link |
-| `otp-code` | High-contrast code display for transactional emails (roadmap) |
-| `footer` | Company address, reason for receiving the email, preferences note |
+| Component        | Purpose                                                                                                   |
+| ---------------- | --------------------------------------------------------------------------------------------------------- |
+| `header`         | Logo (light and dark variants), preheader, view-in-browser link                                           |
+| `hero`           | Headline, supporting text, optional image with alt text                                                   |
+| `button`         | "Bulletproof" button: HTML/CSS for modern clients, VML fallback for Outlook desktop, 44 px minimum height |
+| `content-block`  | Heading plus paragraph, single column                                                                     |
+| `post-list-item` | Avatar, title, meta (community digest)                                                                    |
+| `event-card`     | Date badge, title, location or link                                                                       |
+| `otp-code`       | High-contrast code display for transactional emails (roadmap)                                             |
+| `footer`         | Company address, reason for receiving the email, preferences note                                         |
 
 ### 5.3 Templates
 
-| Template | Stream | Story (fictional) |
-|---|---|---|
-| `welcome` | Activation | New NusaFlow workspace: create your first project, invite your team, connect billing |
-| `community-digest` | Engagement | "WDNusantara Community" digest: featured post, three recent discussions, one upcoming event |
-| `win-back` | Retention | "Your workspace is waiting": shows what changed since the last login |
-| `password-reset`, `otp-code` (roadmap) | Transactional | Security-focused, minimal, high contrast |
+| Template                               | Stream        | Story (fictional)                                                                           |
+| -------------------------------------- | ------------- | ------------------------------------------------------------------------------------------- |
+| `welcome`                              | Activation    | New NusaFlow workspace: create your first project, invite your team, connect billing        |
+| `community-digest`                     | Engagement    | "WDNusantara Community" digest: featured post, three recent discussions, one upcoming event |
+| `win-back`                             | Retention     | "Your workspace is waiting": shows what changed since the last login                        |
+| `password-reset`, `otp-code` (roadmap) | Transactional | Security-focused, minimal, high contrast                                                    |
 
 ### 5.4 Build pipeline
 
@@ -367,30 +374,30 @@ export interface BuildStep {
 }
 ```
 
-| Order | Step | What it does |
-|---|---|---|
-| 1 | `ComposeStep` | Resolves component includes into the template. Uses a custom delimiter (for example `<!--@include header-->`) so runtime `{{ }}` merge tags pass through untouched |
-| 2 | `TokenStep` | Replaces design tokens with values |
-| 3 | `InlineCssStep` | Inlines CSS with `juice`, keeps the `<style>` block for media queries and dark mode |
-| 4 | `DarkPreviewStep` | Creates a second copy where the `@media (prefers-color-scheme: dark)` rules apply unconditionally, used only by the site's "simulated dark mode" toggle |
-| 5 | `PlainTextStep` | Generates the plain-text alternative with `html-to-text` |
-| 6 | `LintStep` | Runs the rule list below; errors fail the build |
-| 7 | `EmitStep` | Writes `dist/emails/<template>.html`, `.dark.html`, `.txt` and `manifest.json` |
+| Order | Step              | What it does                                                                                                                                                       |
+| ----- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1     | `ComposeStep`     | Resolves component includes into the template. Uses a custom delimiter (for example `<!--@include header-->`) so runtime `{{ }}` merge tags pass through untouched |
+| 2     | `TokenStep`       | Replaces design tokens with values                                                                                                                                 |
+| 3     | `InlineCssStep`   | Inlines CSS with `juice`, keeps the `<style>` block for media queries and dark mode                                                                                |
+| 4     | `DarkPreviewStep` | Creates a second copy where the `@media (prefers-color-scheme: dark)` rules apply unconditionally, used only by the site's "simulated dark mode" toggle            |
+| 5     | `PlainTextStep`   | Generates the plain-text alternative with `html-to-text`                                                                                                           |
+| 6     | `LintStep`        | Runs the rule list below; errors fail the build                                                                                                                    |
+| 7     | `EmitStep`        | Writes `dist/emails/<template>.html`, `.dark.html`, `.txt` and `manifest.json`                                                                                     |
 
 **Lint rules** (each a class implementing `LintRule`, registered in one array):
 
-| Rule | Fails when |
-|---|---|
-| `SizeBudgetRule` | HTML is larger than 102 KB (Gmail clips larger messages) |
-| `AltTextRule` | An `<img>` has no `alt` attribute (decorative images use `alt=""`) |
-| `LangAttributeRule` | `<html lang>` is missing |
-| `TitleRule` | `<title>` is missing |
-| `PresentationRoleRule` | A layout `<table>` lacks `role="presentation"` |
-| `ContrastRule` | A token pair used for text fails 4.5:1 |
-| `PreheaderRule` | Hidden preheader text is missing |
-| `MergeTagRule` | A merge tag is not in the documented allowlist |
-| `LinkRule` | A link is empty, uses `#`, or lacks `https` |
-| `ImageWeightRule` | A single image exceeds its budget (default 100 KB) or total image weight exceeds budget |
+| Rule                   | Fails when                                                                              |
+| ---------------------- | --------------------------------------------------------------------------------------- |
+| `SizeBudgetRule`       | HTML is larger than 102 KB (Gmail clips larger messages)                                |
+| `AltTextRule`          | An `<img>` has no `alt` attribute (decorative images use `alt=""`)                      |
+| `LangAttributeRule`    | `<html lang>` is missing                                                                |
+| `TitleRule`            | `<title>` is missing                                                                    |
+| `PresentationRoleRule` | A layout `<table>` lacks `role="presentation"`                                          |
+| `ContrastRule`         | A token pair used for text fails 4.5:1                                                  |
+| `PreheaderRule`        | Hidden preheader text is missing                                                        |
+| `MergeTagRule`         | A merge tag is not in the documented allowlist                                          |
+| `LinkRule`             | A link is empty, uses `#`, or lacks `https`                                             |
+| `ImageWeightRule`      | A single image exceeds its budget (default 100 KB) or total image weight exceeds budget |
 
 ### 5.5 Email technical standards
 
@@ -406,23 +413,23 @@ export interface BuildStep {
 
 **Input rules** (enforced by domain value objects, with shape checks by `zod` at the HTTP edge):
 
-| Field | Rules |
-|---|---|
-| `email` | Required, valid, at most 254 characters, normalised to lower case |
-| `firstName` | Required, 1 to 40 characters, letters, spaces, hyphens, apostrophes |
-| `subject` | Optional, at most 80 characters, control characters and newlines rejected, default from template |
-| `templateId` | One of the known template ids |
-| `consent` | Must be true |
-| `botToken` | Required Turnstile token |
-| `website` (honeypot) | Must be empty |
+| Field                | Rules                                                                                            |
+| -------------------- | ------------------------------------------------------------------------------------------------ |
+| `email`              | Required, valid, at most 254 characters, normalised to lower case                                |
+| `firstName`          | Required, 1 to 40 characters, letters, spaces, hyphens, apostrophes                              |
+| `subject`            | Optional, at most 80 characters, control characters and newlines rejected, default from template |
+| `templateId`         | One of the known template ids                                                                    |
+| `consent`            | Must be true                                                                                     |
+| `botToken`           | Required Turnstile token                                                                         |
+| `website` (honeypot) | Must be empty                                                                                    |
 
 **Limits** (all keys are salted SHA-256 hashes, never raw addresses or IPs):
 
-| Limit | Default |
-|---|---|
-| Per recipient | 1 per 24 hours |
-| Per client IP | 3 per 24 hours |
-| Global | `GLOBAL_DAILY_CAP`, default 30, kept well under the provider's free daily limit so abuse cannot block your own demos |
+| Limit         | Default                                                                                                              |
+| ------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Per recipient | 1 per 24 hours                                                                                                       |
+| Per client IP | 3 per 24 hours                                                                                                       |
+| Global        | `GLOBAL_DAILY_CAP`, default 30, kept well under the provider's free daily limit so abuse cannot block your own demos |
 
 When the global cap is reached, the site shows "demo limit reached today" and points to the previews and screenshots.
 
@@ -444,14 +451,14 @@ Request:
 }
 ```
 
-| Status | Meaning | Body |
-|---|---|---|
-| `202 Accepted` | Email handed to the provider | `{ "receiptId": "..." }` |
-| `400 Bad Request` | Validation failed | Problem details with `errors[]` per field |
-| `403 Forbidden` | Bot check failed | Problem details |
-| `404 Not Found` | Unknown template | Problem details |
-| `429 Too Many Requests` | A limit was hit | Problem details plus `Retry-After` header |
-| `503 Service Unavailable` | Kill switch on, daily cap reached, or provider failure | Problem details |
+| Status                    | Meaning                                                | Body                                      |
+| ------------------------- | ------------------------------------------------------ | ----------------------------------------- |
+| `202 Accepted`            | Email handed to the provider                           | `{ "receiptId": "..." }`                  |
+| `400 Bad Request`         | Validation failed                                      | Problem details with `errors[]` per field |
+| `403 Forbidden`           | Bot check failed                                       | Problem details                           |
+| `404 Not Found`           | Unknown template                                       | Problem details                           |
+| `429 Too Many Requests`   | A limit was hit                                        | Problem details plus `Retry-After` header |
+| `503 Service Unavailable` | Kill switch on, daily cap reached, or provider failure | Problem details                           |
 
 Errors use **RFC 9457 problem details** (`application/problem+json`): `type`, `title`, `status`, `detail`, plus `errors` for validation. The mapping lives in one file, `presentation/http/map-error-to-http.ts`, so use cases never know about HTTP.
 
@@ -476,16 +483,16 @@ This site exposes an email-sending endpoint to the public internet, so these con
 
 Two different names, two different jobs:
 
-| Name | Job | On Vercel? |
-|---|---|---|
-| `inbox.wdnusantara.my.id` (proposed) | The portfolio website | **Yes**, add it to the Vercel project (Hobby plan) |
-| `mail.wdnusantara.my.id` | **Sending domain only** (SPF, DKIM, DMARC alignment) | **No. DNS records only.** Do not attach it to a Vercel project |
+| Name                                 | Job                                                  | On Vercel?                                                     |
+| ------------------------------------ | ---------------------------------------------------- | -------------------------------------------------------------- |
+| `inbox.wdnusantara.my.id` (proposed) | The portfolio website                                | **Yes**, add it to the Vercel project (Hobby plan)             |
+| `mail.wdnusantara.my.id`             | **Sending domain only** (SPF, DKIM, DMARC alignment) | **No. DNS records only.** Do not attach it to a Vercel project |
 
 Why: a sending subdomain needs mail-related DNS records (MX, TXT, DKIM). Attaching the same name to a website adds a competing record and gains nothing. Keeping them separate also isolates email reputation from the website.
 
 ### Setup steps
 
-1. **Find where DNS is managed.** If the domain's nameservers point to Vercel, add records in *Vercel dashboard → Domains → DNS Records*. Otherwise add them at the registrar or DNS host that controls the nameservers.
+1. **Find where DNS is managed.** If the domain's nameservers point to Vercel, add records in _Vercel dashboard → Domains → DNS Records_. Otherwise add them at the registrar or DNS host that controls the nameservers.
 2. **Add the sending domain in Resend** as `mail.wdnusantara.my.id`. Resend shows the exact DNS records to create (SPF, DKIM and a return-path entry). Copy them **exactly as displayed**.
 3. **Add a DMARC record** for the domain, starting in monitoring mode, for example a `TXT` record at `_dmarc.wdnusantara.my.id` with `v=DMARC1; p=none; rua=mailto:<your address>`. Tighten the policy (`quarantine`, then `reject`) only after reports look clean.
 4. **Verify** in Resend, then send test emails to your own Gmail, Outlook.com, iCloud and Yahoo accounts. Check the headers show SPF, DKIM and DMARC as `pass`.
@@ -497,6 +504,7 @@ Why: a sending subdomain needs mail-related DNS records (MX, TXT, DKIM). Attachi
 ## 10. Clean code conventions
 
 **Naming and structure**
+
 - Names say what a thing is or does: `SendTestEmail`, `consumeRateLimit`, `isSendingEnabled`. No `Manager`, `Helper`, `Utils` dumping grounds.
 - Files are `kebab-case`; classes and types `PascalCase`; functions and variables `camelCase`; constants `SCREAMING_SNAKE_CASE`.
 - Named exports only. The only default exports are those Next.js requires (pages, layouts, route files).
@@ -504,12 +512,14 @@ Why: a sending subdomain needs mail-related DNS records (MX, TXT, DKIM). Attachi
 - At most three positional parameters; beyond that, pass an options object.
 
 **Type safety**
+
 - TypeScript `strict: true`, plus `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`.
 - No `any`. Use `unknown` and narrow. No non-null assertions (`!`) without a comment explaining why.
 - Validate **all** external input (HTTP body, environment, file manifests) with `zod` at the boundary. Inside the core, trust the types.
 - Prefer `readonly` and immutability. Domain objects are immutable.
 
 **Behaviour**
+
 - Expected failures are returned as `Result` values. Unexpected failures throw, are logged once at the boundary, and become a generic `503`.
 - No magic numbers or strings: name them as constants or configuration (`MAX_SUBJECT_LENGTH`).
 - Functions do one thing at one level of abstraction. Extract when a comment would be needed to explain a block.
@@ -518,26 +528,28 @@ Why: a sending subdomain needs mail-related DNS records (MX, TXT, DKIM). Attachi
 - Side effects live in infrastructure. Domain and application code is deterministic, and time comes from a `Clock` port so tests are stable.
 
 **Frontend**
+
 - Server Components by default; add `"use client"` only for interactivity (preview toggles, the form).
 - Presentational components receive props and render. Data access happens in server components via use cases, never in leaf components.
 - Accessible by construction: semantic elements, labels, focus states, live regions for form status, `prefers-reduced-motion`.
 
 **Git and review**
+
 - Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`), enforced by `commitlint`.
 - Trunk-based: short-lived branches, small pull requests, squash merge. Semantic version tags for releases.
 - Every pull request uses the checklist in [Definition of done](#17-definition-of-done).
 
 ## 11. Testing strategy
 
-| Level | Tooling | What it covers | Target |
-|---|---|---|---|
-| Unit | Vitest | Value objects, entities, use cases with in-memory fakes, merge tag renderer | 90%+ lines on `domain` and `application` |
-| Contract | Vitest | One shared suite per port, run against the in-memory adapter and (where possible) the real adapter | Every port |
-| Integration | Vitest | Route handler with fake adapters: status codes, problem details, `Retry-After` | All documented statuses |
-| Email build | Vitest | Each template builds; lint rules pass; size and merge tags snapshot-tested | All templates |
-| Accessibility | Playwright + axe | Site pages and keyboard flows | No serious or critical violations |
-| End to end | Playwright | Choose template, toggle mobile and dark preview, submit the form with a fake sender | Main user journeys |
-| Rendering QA | Manual + free preview tools | Real inbox tests and labelled screenshots | Each template, each client in the matrix |
+| Level         | Tooling                     | What it covers                                                                                     | Target                                   |
+| ------------- | --------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Unit          | Vitest                      | Value objects, entities, use cases with in-memory fakes, merge tag renderer                        | 90%+ lines on `domain` and `application` |
+| Contract      | Vitest                      | One shared suite per port, run against the in-memory adapter and (where possible) the real adapter | Every port                               |
+| Integration   | Vitest                      | Route handler with fake adapters: status codes, problem details, `Retry-After`                     | All documented statuses                  |
+| Email build   | Vitest                      | Each template builds; lint rules pass; size and merge tags snapshot-tested                         | All templates                            |
+| Accessibility | Playwright + axe            | Site pages and keyboard flows                                                                      | No serious or critical violations        |
+| End to end    | Playwright                  | Choose template, toggle mobile and dark preview, submit the form with a fake sender                | Main user journeys                       |
+| Rendering QA  | Manual + free preview tools | Real inbox tests and labelled screenshots                                                          | Each template, each client in the matrix |
 
 **Test doubles:** hand-written in-memory fakes (`InMemoryRateLimiter`, `FakeEmailSender`, `FixedClock`) instead of mocking libraries, so tests read as behaviour.
 
@@ -591,19 +603,19 @@ pnpm dev
 
 **Scripts** (add to `package.json`):
 
-| Script | Purpose |
-|---|---|
-| `dev` | Start Next.js locally |
-| `build` | `emails:build` then `next build` |
-| `emails:build` | Run the email pipeline once |
-| `emails:watch` | Rebuild emails on change |
-| `emails:lint` | Run only the email lint rules |
-| `typecheck` | `tsc --noEmit` |
-| `lint` | ESLint |
-| `arch:check` | `depcruise src --config .dependency-cruiser.cjs` |
-| `test` | Vitest (unit, contract, integration, email) |
-| `test:e2e` | Playwright |
-| `format` | Prettier |
+| Script         | Purpose                                          |
+| -------------- | ------------------------------------------------ |
+| `dev`          | Start Next.js locally                            |
+| `build`        | `emails:build` then `next build`                 |
+| `emails:build` | Run the email pipeline once                      |
+| `emails:watch` | Rebuild emails on change                         |
+| `emails:lint`  | Run only the email lint rules                    |
+| `typecheck`    | `tsc --noEmit`                                   |
+| `lint`         | ESLint                                           |
+| `arch:check`   | `depcruise src --config .dependency-cruiser.cjs` |
+| `test`         | Vitest (unit, contract, integration, email)      |
+| `test:e2e`     | Playwright                                       |
+| `format`       | Prettier                                         |
 
 **Local development without real services:** set `EMAIL_DRIVER=console`, `RATE_LIMIT_DRIVER=memory`, `BOT_DRIVER=noop`. The app works fully offline and prints the email instead of sending it.
 
@@ -611,29 +623,30 @@ pnpm dev
 
 All configuration is read and validated in `src/infrastructure/config/env.ts`. Commit `.env.example` with placeholders only.
 
-| Variable | Example | Purpose |
-|---|---|---|
-| `SITE_URL` | `https://inbox.wdnusantara.my.id` | Absolute URLs for email images and links |
-| `EMAIL_DRIVER` | `resend` or `console` | Chooses the `EmailSender` adapter |
-| `RESEND_API_KEY` | `re_...` | Resend credential (server only) |
-| `EMAIL_FROM` | `WDNusantara <hello@mail.wdnusantara.my.id>` | Fixed sender |
-| `EMAIL_REPLY_TO` | `you@...` | A mailbox you read |
-| `BOT_DRIVER` | `turnstile` or `noop` | Chooses the `BotVerifier` adapter |
-| `TURNSTILE_SECRET_KEY` | | Server-side verification |
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | | Client widget |
-| `RATE_LIMIT_DRIVER` | `upstash` or `memory` | Chooses the `RateLimiter` adapter |
-| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | | Upstash credentials |
-| `IDENTITY_HASH_SALT` | long random string | Salt for hashing addresses and IPs |
-| `SENDING_ENABLED` | `true` | Kill switch |
-| `GLOBAL_DAILY_CAP` | `30` | Global sends per day |
-| `WEBHOOK_URL` | | Optional Make or Zapier endpoint (P2) |
-| `LOG_LEVEL` | `info` | Logging verbosity |
+| Variable                                              | Example                                      | Purpose                                  |
+| ----------------------------------------------------- | -------------------------------------------- | ---------------------------------------- |
+| `SITE_URL`                                            | `https://inbox.wdnusantara.my.id`            | Absolute URLs for email images and links |
+| `EMAIL_DRIVER`                                        | `resend` or `console`                        | Chooses the `EmailSender` adapter        |
+| `RESEND_API_KEY`                                      | `re_...`                                     | Resend credential (server only)          |
+| `EMAIL_FROM`                                          | `WDNusantara <hello@mail.wdnusantara.my.id>` | Fixed sender                             |
+| `EMAIL_REPLY_TO`                                      | `you@...`                                    | A mailbox you read                       |
+| `BOT_DRIVER`                                          | `turnstile` or `noop`                        | Chooses the `BotVerifier` adapter        |
+| `TURNSTILE_SECRET_KEY`                                |                                              | Server-side verification                 |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY`                      |                                              | Client widget                            |
+| `RATE_LIMIT_DRIVER`                                   | `upstash` or `memory`                        | Chooses the `RateLimiter` adapter        |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` |                                              | Upstash credentials                      |
+| `IDENTITY_HASH_SALT`                                  | long random string                           | Salt for hashing addresses and IPs       |
+| `SENDING_ENABLED`                                     | `true`                                       | Kill switch                              |
+| `GLOBAL_DAILY_CAP`                                    | `30`                                         | Global sends per day                     |
+| `WEBHOOK_URL`                                         |                                              | Optional Make or Zapier endpoint (P2)    |
+| `LOG_LEVEL`                                           | `info`                                       | Logging verbosity                        |
 
 ## 15. Roadmap
 
 Check items off as they ship. Order matters more than dates.
 
 **Phase 0: Setup**
+
 - [ ] GitHub repository (public), Vercel project, `inbox.wdnusantara.my.id` attached
 - [ ] Resend domain `mail.wdnusantara.my.id` verified; SPF, DKIM, DMARC passing
 - [ ] Turnstile and Upstash accounts created
@@ -641,27 +654,32 @@ Check items off as they ship. Order matters more than dates.
 - [ ] CI pipeline and architecture check green on an empty project
 
 **Phase 1: Core (domain and application)**
+
 - [ ] Value objects, entities, errors, `Result`
 - [ ] Ports and the three use cases, fully unit-tested with fakes
 - [ ] Port contract tests
 
 **Phase 2: Email system**
+
 - [ ] Tokens, components, build pipeline and lint rules
 - [ ] Template A `welcome`
 - [ ] Templates B `community-digest` and C `win-back`, with dark mode
 
 **Phase 3: Infrastructure and delivery**
+
 - [ ] Adapters: Resend, Upstash, Turnstile, file system, merge tags
 - [ ] Composition root and env validation
 - [ ] Route handler, problem details mapping, integration tests
 
 **Phase 4: Site**
+
 - [ ] Gallery, preview frame (desktop, mobile, light, simulated dark, HTML and text views)
 - [ ] Send form with accessible states
 - [ ] Proof gallery and pre-send checklist pages
 - [ ] Playwright and axe tests
 
 **Phase 5: QA and content**
+
 - [ ] Real-inbox tests and labelled screenshots
 - [ ] Free preview tool results, labelled real or simulated
 - [ ] Case studies for each template
@@ -672,18 +690,18 @@ Check items off as they ship. Order matters more than dates.
 
 ## 16. Architecture decision records
 
-Keep short ADRs in `docs/adr/` using this shape: *Context, Decision, Consequences*. Start with:
+Keep short ADRs in `docs/adr/` using this shape: _Context, Decision, Consequences_. Start with:
 
-| ADR | Decision |
-|---|---|
-| 0001 | Clean Architecture with a strict dependency rule inside a single Next.js package, enforced by tooling |
-| 0002 | Table-based email HTML with build-time CSS inlining instead of a framework that hides the markup |
+| ADR  | Decision                                                                                                                               |
+| ---- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| 0001 | Clean Architecture with a strict dependency rule inside a single Next.js package, enforced by tooling                                  |
+| 0002 | Table-based email HTML with build-time CSS inlining instead of a framework that hides the markup                                       |
 | 0003 | A restricted merge-tag renderer (allowlist, HTML-escaped) instead of a full template engine, for safety and Iterable/Lob compatibility |
-| 0004 | Resend behind an `EmailSender` port so the provider can be swapped |
-| 0005 | Stateless design: no database; only hashed rate-limit keys with a TTL |
-| 0006 | Result values for expected failures, exceptions for unexpected ones |
-| 0007 | Separate sending subdomain (`mail`) from the website subdomain (`inbox`) |
-| 0008 | Real-versus-simulated labelling for all rendering evidence |
+| 0004 | Resend behind an `EmailSender` port so the provider can be swapped                                                                     |
+| 0005 | Stateless design: no database; only hashed rate-limit keys with a TTL                                                                  |
+| 0006 | Result values for expected failures, exceptions for unexpected ones                                                                    |
+| 0007 | Separate sending subdomain (`mail`) from the website subdomain (`inbox`)                                                               |
+| 0008 | Real-versus-simulated labelling for all rendering evidence                                                                             |
 
 ## 17. Definition of done
 

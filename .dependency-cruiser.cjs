@@ -13,7 +13,9 @@ module.exports = {
       severity: "error",
       comment: "Domain stays pure TypeScript: no npm packages, no Node built-ins.",
       from: { path: "^src/domain" },
-      to: { dependencyTypes: ["npm", "npm-dev", "npm-optional", "npm-peer", "npm-unknown", "core"] },
+      to: {
+        dependencyTypes: ["npm", "npm-dev", "npm-optional", "npm-peer", "npm-unknown", "core"],
+      },
     },
     {
       name: "application-only-on-domain",

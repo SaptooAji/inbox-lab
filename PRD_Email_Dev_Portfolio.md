@@ -14,6 +14,7 @@ My CV shows strong front-end and integration work but no email or marketing-oper
 **Goal:** One public Next.js site where a reviewer can, in under two minutes, see three polished emails, preview them on desktop, mobile, light and dark, see proof they render across major inboxes, and send a test to their own inbox. A technical reviewer can then open the repository and find a modular template system, accessible markup, and clean automation.
 
 **What "done" looks like:**
+
 - 3 production-quality email templates built from one shared component library
 - Real rendering evidence (real-inbox tests plus free-tier preview tools, each labelled) for each template
 - A safe, rate-limited "send me a test" feature
@@ -22,20 +23,21 @@ My CV shows strong front-end and integration work but no email or marketing-oper
 
 ## 2. Tooling (researched 30 Sep 2026): zero recurring cost
 
-| Need | Tool | Cost | Notes |
-|---|---|---|---|
-| Hosting | Next.js on Vercel Hobby | $0 | Hobby is for personal, non-commercial use, which fits a portfolio |
-| Domain | Existing .my.id domain | Already paid | Send from a subdomain (for example `mail.<yourdomain>.my.id`) so email reputation stays separate from the main site |
-| Sending API | Resend, free plan | $0 | 3,000 emails/month and 100/day; verify at sign-up. Amazon SES deliberately not used |
-| Bot protection | Cloudflare Turnstile | $0 | |
-| Rate limiting | Upstash Redis free tier | $0 | Verify limits at sign-up |
-| Rendering proof | Real inbox tests plus free-tier preview tools | $0 | See section 8 |
-| Real ESP experience | Klaviyo free plan | $0 | 250 profiles, 500 emails/month. The job posting lists Klaviyo as comparable to Iterable |
-| Automation (P2) | Make or Zapier free tier | $0 | Small monthly caps; verify |
-| Direct mail (P1) | Lob test environment | Verify | May be free; fallback is local PDF export |
-| Iterable | Not available | n/a | No free plan or self-serve trial found. Templates use compatible merge syntax plus porting notes only |
+| Need                | Tool                                          | Cost         | Notes                                                                                                               |
+| ------------------- | --------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------- |
+| Hosting             | Next.js on Vercel Hobby                       | $0           | Hobby is for personal, non-commercial use, which fits a portfolio                                                   |
+| Domain              | Existing .my.id domain                        | Already paid | Send from a subdomain (for example `mail.<yourdomain>.my.id`) so email reputation stays separate from the main site |
+| Sending API         | Resend, free plan                             | $0           | 3,000 emails/month and 100/day; verify at sign-up. Amazon SES deliberately not used                                 |
+| Bot protection      | Cloudflare Turnstile                          | $0           |                                                                                                                     |
+| Rate limiting       | Upstash Redis free tier                       | $0           | Verify limits at sign-up                                                                                            |
+| Rendering proof     | Real inbox tests plus free-tier preview tools | $0           | See section 8                                                                                                       |
+| Real ESP experience | Klaviyo free plan                             | $0           | 250 profiles, 500 emails/month. The job posting lists Klaviyo as comparable to Iterable                             |
+| Automation (P2)     | Make or Zapier free tier                      | $0           | Small monthly caps; verify                                                                                          |
+| Direct mail (P1)    | Lob test environment                          | Verify       | May be free; fallback is local PDF export                                                                           |
+| Iterable            | Not available                                 | n/a          | No free plan or self-serve trial found. Templates use compatible merge syntax plus porting notes only               |
 
 **Notes**
+
 - **Litmus is out.** The trial was already used at a previous job. Do not open a second account to get another trial, and do not reuse any screenshots, templates or brand assets made for that employer.
 - **Domain check (Phase 0, first hour).** Resend verifies a domain through DNS records, so a .my.id domain should work, but this has not been confirmed. If verification fails, or test emails land in spam at Gmail, Outlook.com or iCloud, the fallback is another free sender such as Mailtrap (listed at 4,000/month and 150/day by a third-party comparison; verify).
 - **Free tiers change.** Re-check every limit on the vendor's pricing page when you sign up.
@@ -48,6 +50,7 @@ My CV shows strong front-end and integration work but no email or marketing-oper
 ## 4. Scope
 
 ### P0 (must ship)
+
 - Design system and component library for email
 - Three templates (see section 6)
 - Next.js single-page site with template gallery and live preview
@@ -56,16 +59,19 @@ My CV shows strong front-end and integration work but no email or marketing-oper
 - README and three short case studies
 
 ### P1 (should ship)
+
 - Direct mail showcase: one postcard (6x4 in) and one letter (8.5x11 in) in print HTML/CSS with merge variables, exported as PDF previews
 - One real Klaviyo welcome flow built by me (private account), documented with screenshots and a short screen recording
 - Iterable porting notes document
 
 ### P2 (nice to have)
+
 - Webhook on successful send to Make or Zapier that logs to a spreadsheet or Slack, documented as an automation example
 - Plain-text version viewer next to each template
 - Accessibility audit write-up (contrast table, screen-reader notes)
 
 ### Non-goals
+
 - User accounts, template editor, or a WYSIWYG builder
 - Free-form message body (prevents phishing and spam abuse)
 - Bulk sending, subscriptions, or storing a mailing list
@@ -74,6 +80,7 @@ My CV shows strong front-end and integration work but no email or marketing-oper
 ## 5. Site requirements (single page)
 
 **Sections, in order:**
+
 1. **Hero:** one-line pitch, links to GitHub and CV.
 2. **Template gallery:** three cards. Selecting one opens a large preview.
 3. **Preview controls:** desktop / mobile width toggle, light / dark toggle, "View HTML", "View plain text".
@@ -84,6 +91,7 @@ My CV shows strong front-end and integration work but no email or marketing-oper
 8. **Case studies:** three short write-ups.
 
 **Preview implementation notes**
+
 - Render each email in a sandboxed `iframe` using `srcdoc`.
 - The mobile toggle resizes the iframe to 375 px width.
 - An iframe cannot be forced into the viewer's dark mode, so the build step outputs a second copy of each email where the dark-mode `@media (prefers-color-scheme: dark)` block is rewritten as unconditional styles. The dark toggle swaps to that copy. Label it "simulated dark mode" and let the real-client dark screenshots carry the proof.
@@ -94,13 +102,14 @@ My CV shows strong front-end and integration work but no email or marketing-oper
 
 Use a **fictional brand** with original assets. Do not use real brand names, logos or photos.
 
-| # | Template | Lifecycle stream | What it proves |
-|---|---|---|---|
-| A | **Welcome / onboarding** | Activation | Hero, 3-step module, bulletproof button (VML fallback for Outlook), personalization, preheader |
-| B | **Community digest** | Engagement / community | Modular blocks (featured post, post list with avatars, event card). Mirrors a Circle-style community newsletter. Shows reusable components |
-| C | **Win-back offer** | Retention | Dark mode logo and image handling, image-off fallback, strong contrast, responsive layout change |
+| #   | Template                 | Lifecycle stream       | What it proves                                                                                                                             |
+| --- | ------------------------ | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| A   | **Welcome / onboarding** | Activation             | Hero, 3-step module, bulletproof button (VML fallback for Outlook), personalization, preheader                                             |
+| B   | **Community digest**     | Engagement / community | Modular blocks (featured post, post list with avatars, event card). Mirrors a Circle-style community newsletter. Shows reusable components |
+| C   | **Win-back offer**       | Retention              | Dark mode logo and image handling, image-off fallback, strong contrast, responsive layout change                                           |
 
 ### Email technical standards (every template)
+
 - **Layout:** table-based, `role="presentation"` on layout tables, 600 px max width, fluid on mobile, single-column stack under 480 px.
 - **CSS:** inline CSS for critical styles (via build step), small `<style>` block for media queries and dark mode. No reliance on external CSS.
 - **Outlook:** MSO conditional comments, `mso-line-height-rule`, VML bulletproof button, ghost tables for width control.
@@ -112,6 +121,7 @@ Use a **fictional brand** with original assets. Do not use real brand names, log
 - **Preheader:** hidden preheader text with padding characters.
 
 ### Modular system
+
 - Source lives in `/emails`: `components/` (header, hero, button, content block, list item, event card, footer), `templates/` (A, B, C), `tokens.json` (colours, type scale, spacing).
 - A Node build script composes components into templates. Use a custom delimiter for build-time includes so that `{{ }}` runtime merge tags pass through untouched.
 - The build inlines CSS (for example with `juice`), creates the dark-preview copy, generates plain text, reports file size, and fails the build if a template exceeds 102 KB or an image lacks `alt`.
@@ -120,19 +130,21 @@ Use a **fictional brand** with original assets. Do not use real brand names, log
 ## 7. "Send me a test" feature
 
 **Fields**
-| Field | Rules |
-|---|---|
-| Recipient email | Required, valid format, max 254 chars |
-| First name | Required, 1-40 chars, letters, spaces, hyphens and apostrophes only. HTML-escaped before merging |
-| Subject | Optional, max 80 chars, newlines stripped. Defaults to the template's built-in subject |
-| Template | Required, radio with preview thumbnails (A, B or C) |
-| Consent checkbox | Required: "Send me this one-time demo email. I understand I am not subscribing to anything." |
-| Honeypot field | Hidden, must stay empty |
-| Turnstile token | Required |
+
+| Field            | Rules                                                                                            |
+| ---------------- | ------------------------------------------------------------------------------------------------ |
+| Recipient email  | Required, valid format, max 254 chars                                                            |
+| First name       | Required, 1-40 chars, letters, spaces, hyphens and apostrophes only. HTML-escaped before merging |
+| Subject          | Optional, max 80 chars, newlines stripped. Defaults to the template's built-in subject           |
+| Template         | Required, radio with preview thumbnails (A, B or C)                                              |
+| Consent checkbox | Required: "Send me this one-time demo email. I understand I am not subscribing to anything."     |
+| Honeypot field   | Hidden, must stay empty                                                                          |
+| Turnstile token  | Required                                                                                         |
 
 **Flow:** form submit calls `POST /api/send`, which validates input, verifies Turnstile, applies rate limits, renders the chosen template with escaped merge values, sends HTML plus text through Resend from a fixed sender, and returns a generic success or error. The button shows loading, success and error states with accessible live-region announcements.
 
 **Abuse controls (required, because this is an email-sending endpoint on the public internet)**
+
 - Fixed sender address and fixed templates; no custom body
 - Turnstile plus honeypot
 - Limits: 1 send per recipient per 24 h, 3 per IP per 24 h, and a global daily cap well below the provider's free limit
@@ -182,17 +194,17 @@ Build one real welcome flow in a Klaviyo free account: trigger, delay, email usi
 
 ## 12. Success criteria
 
-| Area | Criterion |
-|---|---|
-| Templates | All 3 render without broken layout in every client captured |
-| Dark mode | Logo and text remain legible in Apple Mail and Outlook.com dark mode |
-| Accessibility | Contrast 4.5:1 or better, alt text present, tap targets 44 px or larger |
-| Performance | Each email HTML under 102 KB |
-| Modularity | All three templates built from the shared component library |
-| Send feature | Test email arrives in the inbox (not spam) for Gmail, Outlook.com and iCloud |
-| Safety | Rate limits and kill switch verified by test |
-| Site | Lighthouse accessibility 95+ |
-| Evidence | Case study per template with before/after rendering fixes |
+| Area          | Criterion                                                                    |
+| ------------- | ---------------------------------------------------------------------------- |
+| Templates     | All 3 render without broken layout in every client captured                  |
+| Dark mode     | Logo and text remain legible in Apple Mail and Outlook.com dark mode         |
+| Accessibility | Contrast 4.5:1 or better, alt text present, tap targets 44 px or larger      |
+| Performance   | Each email HTML under 102 KB                                                 |
+| Modularity    | All three templates built from the shared component library                  |
+| Send feature  | Test email arrives in the inbox (not spam) for Gmail, Outlook.com and iCloud |
+| Safety        | Rate limits and kill switch verified by test                                 |
+| Site          | Lighthouse accessibility 95+                                                 |
+| Evidence      | Case study per template with before/after rendering fixes                    |
 
 ## 13. Phases (order matters more than dates)
 
@@ -210,15 +222,15 @@ A realistic estimate for one person working part-time is several weeks. Phases 0
 
 ## 14. Risks and mitigations
 
-| Risk | Mitigation |
-|---|---|
-| Public form gets abused | Controls in section 7; kill switch; global daily cap set well below Resend's 100/day so abuse cannot block my own testing or interview demos |
-| Daily cap reached | Form shows "demo limit reached today" and points to previews and screenshots |
+| Risk                                                      | Mitigation                                                                                                                                       |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Public form gets abused                                   | Controls in section 7; kill switch; global daily cap set well below Resend's 100/day so abuse cannot block my own testing or interview demos     |
+| Daily cap reached                                         | Form shows "demo limit reached today" and points to previews and screenshots                                                                     |
 | Emails land in spam (.my.id is an uncommon domain ending) | Dedicated subdomain, SPF/DKIM/DMARC, plain-text part, low volume, test at Gmail, Outlook.com and iCloud before launch; fallback sender if needed |
-| Free tier limits change | Re-check at setup; keep the send layer in one small module so the provider can be swapped |
-| Outlook desktop cannot be tested for free | Be transparent, show MSO fallback code |
-| Free preview tools only simulate | Label real vs simulated on every screenshot |
-| Overclaiming on CV | Claim only what was done. Do not claim Iterable |
+| Free tier limits change                                   | Re-check at setup; keep the send layer in one small module so the provider can be swapped                                                        |
+| Outlook desktop cannot be tested for free                 | Be transparent, show MSO fallback code                                                                                                           |
+| Free preview tools only simulate                          | Label real vs simulated on every screenshot                                                                                                      |
+| Overclaiming on CV                                        | Claim only what was done. Do not claim Iterable                                                                                                  |
 
 ## 15. What I can honestly put on my CV after this
 
