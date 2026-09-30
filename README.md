@@ -94,7 +94,7 @@ The project follows **Clean Architecture**. Source code dependencies point inwar
 | `infrastructure`                               | `application`, `domain`, vendor SDKs              | `presentation`                                          |
 | `presentation` (`src/app`, `src/presentation`) | `application`, `domain`, and the composition root | vendor SDKs directly, business rules                    |
 
-The rule is **enforced in CI** with `dependency-cruiser` (or `eslint-plugin-boundaries`). A violation fails the build. Run it locally with `pnpm arch:check`.
+The rule is **enforced in CI** with `dependency-cruiser` (or `eslint-plugin-boundaries`). A violation fails the build. Run it locally with `npm run arch:check`.
 
 ### 3.2 Layer responsibilities
 
@@ -476,7 +476,7 @@ This site exposes an email-sending endpoint to the public internet, so these con
 - Secrets only in environment variables. Validate them at startup with `zod`; fail fast if missing. Never commit `.env*` files except `.env.example`.
 - Security headers through `next.config` (CSP, `X-Content-Type-Options`, `Referrer-Policy`, `frame-ancestors`). Email previews render inside a sandboxed `iframe`.
 - Structured logs never contain raw email addresses, names or tokens.
-- Dependabot or Renovate plus `pnpm audit` in CI.
+- Dependabot or Renovate plus `npm run audit` in CI.
 - Privacy note under the form: one-time demo email, no subscription, no list, hashed rate-limit keys for 24 hours.
 
 ## 9. Domains and DNS
@@ -562,14 +562,14 @@ Why: a sending subdomain needs mail-related DNS records (MX, TXT, DKIM). Attachi
 **CI** (`.github/workflows/ci.yml`), on every pull request and push to `main`:
 
 1. Install with a frozen lockfile.
-2. `pnpm typecheck`
-3. `pnpm lint`
-4. `pnpm arch:check` (dependency rule)
-5. `pnpm test` (unit, contract, integration)
-6. `pnpm emails:build` (fails on any lint error or size budget breach)
-7. `pnpm build`
-8. `pnpm test:e2e` (Playwright, with fake adapters)
-9. `pnpm audit --prod`
+2. `npm run typecheck`
+3. `npm run lint`
+4. `npm run arch:check` (dependency rule)
+5. `npm run test` (unit, contract, integration)
+6. `npm run emails:build` (fails on any lint error or size budget breach)
+7. `npm run build`
+8. `npm run test:e2e` (Playwright, with fake adapters)
+9. `npm run audit --prod`
 
 **Deployment:** Vercel's Git integration deploys previews per pull request and production from `main`. Environment variables are set in Vercel, never committed.
 
@@ -577,19 +577,19 @@ Why: a sending subdomain needs mail-related DNS records (MX, TXT, DKIM). Attachi
 
 ## 13. Getting started
 
-**Prerequisites:** Node.js (current LTS), pnpm, a GitHub account, a Vercel account, free accounts for Resend, Cloudflare (Turnstile) and Upstash.
+**Prerequisites:** Node.js (current LTS), npm, a GitHub account, a Vercel account, free accounts for Resend, Cloudflare (Turnstile) and Upstash.
 
 ```bash
 # 1. Create the project
-pnpm dlx create-next-app@latest wdnusantara-inbox-lab \
+npx create-next-app@latest wdnusantara-inbox-lab \
   --ts --eslint --app --src-dir --tailwind --import-alias "@/*"
 cd wdnusantara-inbox-lab
 
 # 2. Runtime dependencies
-pnpm add zod resend @upstash/redis pino juice html-to-text
+npm run add zod resend @upstash/redis pino juice html-to-text
 
 # 3. Development dependencies
-pnpm add -D vitest @vitest/coverage-v8 @playwright/test @axe-core/playwright \
+npm run add -D vitest @vitest/coverage-v8 @playwright/test @axe-core/playwright \
   dependency-cruiser prettier husky lint-staged @commitlint/cli \
   @commitlint/config-conventional tsx @types/html-to-text
 
@@ -597,8 +597,8 @@ pnpm add -D vitest @vitest/coverage-v8 @playwright/test @axe-core/playwright \
 cp .env.example .env.local     # then fill in values (see section 14)
 
 # 5. Build the emails, then run the site
-pnpm emails:build
-pnpm dev
+npm run emails:build
+npm run dev
 ```
 
 **Scripts** (add to `package.json`):
@@ -669,7 +669,7 @@ Check items off as they ship. Order matters more than dates.
 
 - [ ] Adapters: Resend, Upstash, Turnstile, file system, merge tags
 - [ ] Composition root and env validation
-- [ ] Route handler, problem details mapping, integration tests
+- [x] Route handler, problem details mapping, integration tests
 
 **Phase 4: Site**
 
@@ -707,10 +707,10 @@ Keep short ADRs in `docs/adr/` using this shape: _Context, Decision, Consequence
 
 A change is done when:
 
-- [ ] It follows the dependency rule (`pnpm arch:check` passes)
-- [ ] New logic has tests at the right level; `pnpm test` passes
-- [ ] `pnpm typecheck` and `pnpm lint` pass with no new warnings
-- [ ] For email changes: `pnpm emails:build` passes, size budget respected, alt text and contrast verified, dark mode checked
+- [ ] It follows the dependency rule (`npm run arch:check` passes)
+- [ ] New logic has tests at the right level; `npm run test` passes
+- [ ] `npm run typecheck` and `npm run lint` pass with no new warnings
+- [ ] For email changes: `npm run emails:build` passes, size budget respected, alt text and contrast verified, dark mode checked
 - [ ] Accessibility checked (keyboard, focus, labels, contrast)
 - [ ] No secrets, raw personal data or debug logging committed
 - [ ] Docs updated (this README, an ADR if a decision changed, case study if a template changed)
