@@ -3,10 +3,12 @@ import {
   BotCheckFailedError,
   DailyCapReachedError,
   EmailDeliveryError,
+  InvalidRequestError,
   RateLimitedError,
   SendingDisabledError,
   TemplateNotFoundError,
 } from "@/application/errors/application-errors";
+import { ValidationError } from "@/domain/errors/validation-error";
 
 describe("application errors", () => {
   it("exposes a stable code per error", () => {
@@ -32,4 +34,12 @@ describe("application errors", () => {
     expect(error.name).toBe("TemplateNotFoundError");
     expect(error.message).toContain("ghost");
   });
+});
+
+it("carries every validation failure", () => {
+  const failures = [new ValidationError("email", "bad"), new ValidationError("firstName", "bad")];
+  const error = new InvalidRequestError(failures);
+
+  expect(error.code).toBe("INVALID_REQUEST");
+  expect(error.errors).toHaveLength(2);
 });

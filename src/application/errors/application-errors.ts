@@ -1,3 +1,5 @@
+import { ValidationError } from "@/domain/errors/validation-error";
+
 export abstract class ApplicationError extends Error {
   abstract readonly code: string;
 
@@ -57,5 +59,13 @@ export class EmailDeliveryError extends ApplicationError {
 
   constructor(reason: string) {
     super(`The email could not be delivered: ${reason}`);
+  }
+}
+
+export class InvalidRequestError extends ApplicationError {
+  readonly code = "INVALID_REQUEST";
+
+  constructor(readonly errors: readonly ValidationError[]) {
+    super("The request contains invalid fields.");
   }
 }
