@@ -3,6 +3,7 @@ export interface BuildContext {
   readonly html: string;
   readonly darkHtml?: string;
   readonly text?: string;
+  readonly warnings?: readonly string[];
 }
 export interface BuildStep {
   readonly name: string;
