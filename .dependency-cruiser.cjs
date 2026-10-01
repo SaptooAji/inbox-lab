@@ -31,6 +31,14 @@ module.exports = {
       to: { path: "^src/(presentation|app)/" },
     },
     { name: "no-circular", severity: "error", from: {}, to: { circular: true } },
+    {
+      name: "presentation-not-on-infrastructure",
+      severity: "error",
+      comment:
+        "Only the route files in src/app may reach infrastructure, through the composition root.",
+      from: { path: "^src/presentation/" },
+      to: { path: "^src/infrastructure/" },
+    },
   ],
   options: {
     tsConfig: { fileName: "tsconfig.json" },

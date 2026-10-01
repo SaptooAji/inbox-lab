@@ -10,7 +10,13 @@ export default defineConfig({
     environment: "node",
     coverage: {
       provider: "v8",
-      include: ["src/domain/**", "src/application/**", "emails/build/**", "src/infrastructure/**"],
+      include: [
+        "src/domain/**",
+        "src/application/**",
+        "emails/build/**",
+        "src/infrastructure/**",
+        "src/presentation/**",
+      ],
       exclude: [
         "src/application/ports/**",
         "src/application/send-policy.ts",
