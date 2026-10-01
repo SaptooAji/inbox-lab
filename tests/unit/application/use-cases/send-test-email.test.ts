@@ -153,6 +153,31 @@ describe("SendTestEmail", () => {
       expect(sut.rateLimiter.rules).toHaveLength(0);
       expect(sut.sender.sent).toHaveLength(0);
     });
+
+    it("rejects an unknown template id", async () => {
+      const sut = createSut();
+
+      const error = errorOf(await sut.useCase.execute(validInput({ templateId: "unknown" })));
+
+      expect(error).toBeInstanceOf(InvalidRequestError);
+      if (error instanceof InvalidRequestError) {
+        expect(error.errors.map((e) => e.field)).toEqual(["templateId"]);
+      }
+    });
+
+    it("rejects a subject with a line break (header injection)", async () => {
+      const sut = createSut();
+
+      const error = errorOf(
+        await sut.useCase.execute(validInput({ subject: "Hi\nBcc: victim@example.com" })),
+      );
+
+      expect(error).toBeInstanceOf(InvalidRequestError);
+      if (error instanceof InvalidRequestError) {
+        expect(error.errors.map((e) => e.field)).toEqual(["subject"]);
+      }
+      expect(sut.sender.sent).toHaveLength(0);
+    });
   });
 
   describe("rate limits", () => {
