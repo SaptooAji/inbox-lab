@@ -113,15 +113,18 @@ wdnusantara-inbox-lab/
 │  │  ├─ entities/                 email-template.ts
 │  │  ├─ value-objects/            email-address.ts  recipient-name.ts  email-subject.ts  template-id.ts
 │  │  ├─ errors/                   domain-error.ts  validation-error.ts
-│  │  └─ index.ts
+│  │  |─ index.ts
+│  │  └─ result.ts
 │  ├─ application/
 │  │  ├─ ports/                    email-sender.ts  template-repository.ts  template-renderer.ts
 │  │  │                            rate-limiter.ts  bot-verifier.ts  event-publisher.ts
 │  │  │                            clock.ts  logger.ts  identity-hasher.ts
 │  │  ├─ use-cases/                send-test-email.ts  list-templates.ts  get-template.ts
-│  │  ├─ dto/                      send-test-email.dto.ts
+│  │  ├─ dto/                      send-test-email.dto.ts template.dto.ts
 │  │  ├─ errors/                   application-errors.ts
-│  │  └─ result.ts                 Result<T, E> helpers
+│  │  ├─ mappers/
+│  │  |─ result.ts                 Result<T, E> helpers
+│  │  └─ send-policy.ts
 │  ├─ infrastructure/
 │  │  ├─ email/                    resend-email-sender.ts  console-email-sender.ts
 │  │  ├─ templates/                file-system-template-repository.ts  merge-tag-renderer.ts
@@ -146,7 +149,7 @@ wdnusantara-inbox-lab/
 ├─ dist/emails/                    (generated, git-ignored)
 ├─ public/                         email images (served via absolute URLs), proof/ screenshots
 ├─ tests/
-│  ├─ unit/                        domain/  application/  infrastructure/
+│  ├─ unit/                        domain/  application/  infrastructure/ support/
 │  ├─ contract/                    port contract suites
 │  ├─ integration/                 route handler tests with fake adapters
 │  ├─ email/                       lint + snapshot tests for built templates
@@ -198,8 +201,7 @@ Result<SendReceipt, SendTestError>   →  mapped to HTTP status + problem detail
 ```ts
 // src/application/ports/email-sender.ts
 export interface OutgoingEmail {
-  readonly to: string;
-  readonly subject: string;
+  readonly darkHtml: string;
   readonly html: string;
   readonly text: string;
 }
@@ -252,30 +254,21 @@ export class EmailAddress {
 ```ts
 // src/application/use-cases/send-test-email.ts
 export class SendTestEmail {
-  constructor(
-    private readonly botVerifier: BotVerifier,
-    private readonly rateLimiter: RateLimiter,
-    private readonly templates: TemplateRepository,
-    private readonly renderer: TemplateRenderer,
-    private readonly sender: EmailSender,
-    private readonly events: EventPublisher,
-    private readonly hasher: IdentityHasher,
-    private readonly policy: SendPolicy, // caps and kill switch, plain data
-  ) {}
+  constructor(deps: SendTestEmailDependencies) {}
 
   async execute(input: SendTestEmailInput): Promise<Result<SendReceipt, SendTestEmailError>> {
-    if (!this.policy.sendingEnabled) return err(new SendingDisabledError());
+    if (!this.deps.policy.sendingEnabled) return err(new SendingDisabledError());
 
     const request = TestSendRequest.create(input); // builds value objects
     if (!request.ok) return request;
 
-    const human = await this.botVerifier.verify(input.botToken, input.clientIp);
+    const human = await this.deps.botVerifier.verify(input.botToken, input.clientIp);
     if (!human) return err(new BotCheckFailedError());
 
-    const limited = await this.enforceLimits(request.value, input.clientIp);
+    const limited = await this.deps.enforceLimits(request.value, input.clientIp);
     if (!limited.ok) return limited;
 
-    const template = await this.templates.findById(request.value.templateId);
+    const template = await this.deps.templates.findById(request.value.templateId);
     if (!template) return err(new TemplateNotFoundError(request.value.templateId));
 
     const rendered = this.renderer.render(template, {
@@ -503,6 +496,12 @@ Why: a sending subdomain needs mail-related DNS records (MX, TXT, DKIM). Attachi
 
 ## 10. Clean code conventions
 
+**General**
+
+- In .ts files, write generic functions as declarations, not arrow functions.
+- Layer paths in the dependency rules end with a slash.
+- Type-only imports are tracked.
+
 **Naming and structure**
 
 - Names say what a thing is or does: `SendTestEmail`, `consumeRateLimit`, `isSendingEnabled`. No `Manager`, `Helper`, `Utils` dumping grounds.
@@ -526,6 +525,10 @@ Why: a sending subdomain needs mail-related DNS records (MX, TXT, DKIM). Attachi
 - Comments explain **why**, not what. Delete commented-out code.
 - No hidden globals or singletons outside the composition root. No reading `process.env` outside `infrastructure/config/env.ts`.
 - Side effects live in infrastructure. Domain and application code is deterministic, and time comes from a `Clock` port so tests are stable.
+- A filled honeypot field returns success with no side effects.
+- A failing event webhook doesn't fail the request.
+- Limit order is IP, then recipient, then global.
+- InvalidRequestError carries every invalid field.
 
 **Frontend**
 
@@ -541,15 +544,16 @@ Why: a sending subdomain needs mail-related DNS records (MX, TXT, DKIM). Attachi
 
 ## 11. Testing strategy
 
-| Level         | Tooling                     | What it covers                                                                                     | Target                                   |
-| ------------- | --------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| Unit          | Vitest                      | Value objects, entities, use cases with in-memory fakes, merge tag renderer                        | 90%+ lines on `domain` and `application` |
-| Contract      | Vitest                      | One shared suite per port, run against the in-memory adapter and (where possible) the real adapter | Every port                               |
-| Integration   | Vitest                      | Route handler with fake adapters: status codes, problem details, `Retry-After`                     | All documented statuses                  |
-| Email build   | Vitest                      | Each template builds; lint rules pass; size and merge tags snapshot-tested                         | All templates                            |
-| Accessibility | Playwright + axe            | Site pages and keyboard flows                                                                      | No serious or critical violations        |
-| End to end    | Playwright                  | Choose template, toggle mobile and dark preview, submit the form with a fake sender                | Main user journeys                       |
-| Rendering QA  | Manual + free preview tools | Real inbox tests and labelled screenshots                                                          | Each template, each client in the matrix |
+| Level                              | Tooling                     | What it covers                                                                                     | Target                                   |
+| ---------------------------------- | --------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Unit                               | Vitest                      | Value objects, entities, use cases with in-memory fakes, merge tag renderer                        | 90%+ lines on `domain` and `application` |
+| Contract                           | Vitest                      | One shared suite per port, run against the in-memory adapter and (where possible) the real adapter | Every port                               |
+| Integration                        | Vitest                      | Route handler with fake adapters: status codes, problem details, `Retry-After`                     | All documented statuses                  |
+| Email build                        | Vitest                      | Each template builds; lint rules pass; size and merge tags snapshot-tested                         | All templates                            |
+| Accessibility                      | Playwright + axe            | Site pages and keyboard flows                                                                      | No serious or critical violations        |
+| End to end                         | Playwright                  | Choose template, toggle mobile and dark preview, submit the form with a fake sender                | Main user journeys                       |
+| Rendering QA                       | Manual + free preview tools | Real inbox tests and labelled screenshots                                                          | Each template, each client in the matrix |
+| --Notes: Vites config using .mjs-- |
 
 **Test doubles:** hand-written in-memory fakes (`InMemoryRateLimiter`, `FakeEmailSender`, `FixedClock`) instead of mocking libraries, so tests read as behaviour.
 
@@ -562,14 +566,15 @@ Why: a sending subdomain needs mail-related DNS records (MX, TXT, DKIM). Attachi
 **CI** (`.github/workflows/ci.yml`), on every pull request and push to `main`:
 
 1. Install with a frozen lockfile.
-2. `npm run typecheck`
-3. `npm run lint`
-4. `npm run arch:check` (dependency rule)
-5. `npm run test` (unit, contract, integration)
-6. `npm run emails:build` (fails on any lint error or size budget breach)
-7. `npm run build`
-8. `npm run test:e2e` (Playwright, with fake adapters)
-9. `npm run audit --prod`
+2. `npx next typegen`
+3. `npm run typecheck`
+4. `npm run lint`
+5. `npm run arch:check` (dependency rule)
+6. `npm run test` (unit, contract, integration)
+7. `npm run emails:build` (fails on any lint error or size budget breach)
+8. `npm run build`
+9. `npm run test:e2e` (Playwright, with fake adapters)
+10. `npm run audit --prod`
 
 **Deployment:** Vercel's Git integration deploys previews per pull request and production from `main`. Environment variables are set in Vercel, never committed.
 
