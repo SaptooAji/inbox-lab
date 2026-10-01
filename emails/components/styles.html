@@ -1,0 +1,167 @@
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: [[color.surface]];
+  }
+  table,
+  td {
+    border-collapse: collapse;
+    mso-table-lspace: 0pt;
+    mso-table-rspace: 0pt;
+  }
+  .page {
+    background-color: [[color.surface]];
+  }
+  .card {
+    background-color: [[color.bg]];
+    border-radius: 8px;
+  }
+  .text {
+    margin: 0;
+    font-family: [[font.family]];
+    font-size: [[font.size.body]];
+    line-height: [[font.lineHeight]];
+    color: [[color.text]];
+  }
+  .h1 {
+    margin: 0;
+    font-family: [[font.family]];
+    font-size: [[font.size.h1]];
+    line-height: 1.25;
+    font-weight: bold;
+    color: [[color.text]];
+  }
+  .h2 {
+    margin: 0;
+    font-family: [[font.family]];
+    font-size: [[font.size.h2]];
+    line-height: 1.3;
+    font-weight: bold;
+    color: [[color.text]];
+  }
+  .muted {
+    font-family: [[font.family]];
+    font-size: [[font.size.small]];
+    line-height: [[font.lineHeight]];
+    color: [[color.muted]];
+  }
+  .link {
+    color: [[color.link]];
+    text-decoration: underline;
+  }
+  .wordmark {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .badge {
+    background-color: [[color.primary]];
+    color: [[color.onPrimary]];
+    border-radius: 16px;
+    font-family: [[font.family]];
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .date-block {
+    background-color: [[color.surface]];
+    color: [[color.text]];
+    border-radius: 8px;
+    font-family: [[font.family]];
+  }
+  .button-cell {
+    background-color: [[color.primary]];
+  }
+  .button-link {
+    display: inline-block;
+    padding: 0 28px;
+    background-color: [[color.primary]];
+    color: [[color.onPrimary]];
+    font-family: [[font.family]];
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 48px;
+    text-decoration: none;
+    border-radius: 6px;
+  }
+
+  @media (max-width: 480px) {
+    .px {
+      padding-left: 20px !important;
+      padding-right: 20px !important;
+    }
+    .h1 {
+      font-size: 24px !important;
+    }
+    .button-link {
+      display: block !important;
+      text-align: center !important;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body,
+    .page {
+      background-color: [[dark.color.bg]] !important;
+    }
+    .card {
+      background-color: [[dark.color.surface]] !important;
+    }
+    .date-block {
+      background-color: [[dark.color.bg]] !important;
+    }
+    .text,
+    .h1,
+    .h2,
+    .date-block {
+      color: [[dark.color.text]] !important;
+    }
+    .muted {
+      color: [[dark.color.muted]] !important;
+    }
+    .link {
+      color: [[dark.color.link]] !important;
+    }
+    .badge,
+    .button-cell,
+    .button-link {
+      background-color: [[dark.color.accent]] !important;
+    }
+    .badge,
+    .button-link {
+      color: [[dark.color.onAccent]] !important;
+    }
+  }
+</style>
+<style data-embed>
+  [data-ogsb] .page {
+    background-color: [[dark.color.bg]] !important;
+  }
+  [data-ogsb] .card {
+    background-color: [[dark.color.surface]] !important;
+  }
+  [data-ogsb] .date-block {
+    background-color: [[dark.color.bg]] !important;
+  }
+  [data-ogsb] .badge,
+  [data-ogsb] .button-cell,
+  [data-ogsb] .button-link {
+    background-color: [[dark.color.accent]] !important;
+  }
+  [data-ogsc] .text,
+  [data-ogsc] .h1,
+  [data-ogsc] .h2,
+  [data-ogsc] .date-block {
+    color: [[dark.color.text]] !important;
+  }
+  [data-ogsc] .muted {
+    color: [[dark.color.muted]] !important;
+  }
+  [data-ogsc] .link {
+    color: [[dark.color.link]] !important;
+  }
+  [data-ogsc] .badge,
+  [data-ogsc] .button-link {
+    color: [[dark.color.onAccent]] !important;
+  }
+</style>
