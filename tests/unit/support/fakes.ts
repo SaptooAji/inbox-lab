@@ -77,6 +77,7 @@ export class FakeTemplateRenderer implements TemplateRenderer {
   render(template: EmailTemplate, values: MergeValues): RenderedEmail {
     return {
       html: `${template.html}|${values.firstName}`,
+      darkHtml: `${template.darkHtml}|${values.firstName}`,
       text: `${template.text}|${values.firstName}`,
     };
   }

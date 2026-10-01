@@ -6,6 +6,7 @@ export interface MergeValues {
 
 export interface RenderedEmail {
   readonly html: string;
+  readonly darkHtml: string;
   readonly text: string;
 }
 
