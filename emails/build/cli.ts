@@ -3,9 +3,7 @@ import { join } from "node:path";
 import { BuildError } from "./build-step";
 import { buildTemplates } from "./build-templates";
 import { flattenTokens, type TokenTree } from "./tokens";
-
-/** Runtime merge tags the templates may use. Anything else fails the lint. */
-const ALLOWED_MERGE_TAGS = ["firstName"];
+import { ALLOWED_MERGE_TAGS } from "./merge-tags";
 
 async function main(): Promise<void> {
   const emailsDirectory = join(process.cwd(), "emails");

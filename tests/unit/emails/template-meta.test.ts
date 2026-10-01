@@ -22,9 +22,9 @@ describe("parseTemplateMeta", () => {
   });
 
   it.each(["name", "description", "subject"])("rejects a missing %s", (field) => {
-    const { [field]: _removed, ...rest } = valid as Record<string, string>;
+    const incomplete = Object.fromEntries(Object.entries(valid).filter(([key]) => key !== field));
 
-    expect(() => parseTemplateMeta("welcome", rest)).toThrow(`field "${field}"`);
+    expect(() => parseTemplateMeta("welcome", incomplete)).toThrow(`field "${field}"`);
   });
 
   it.each([{ subject: "" }, { subject: "   " }, { subject: 42 }])("rejects %j", (override) => {

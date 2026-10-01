@@ -15,6 +15,7 @@ export default defineConfig({
         "src/application/ports/**",
         "src/application/send-policy.ts",
         "src/application/dto/**",
+        "emails/build/cli.ts",
       ],
       thresholds: { lines: 90, functions: 90, branches: 90, statements: 90 },
     },
