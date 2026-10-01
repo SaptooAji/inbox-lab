@@ -34,6 +34,7 @@ describe("POST /api/v1/test-sends, wired for real", () => {
         buildOutputDirectory: fixture.directory,
         clock: new ManualClock(),
         write: (line) => printed.push(line),
+        fetch: () => Promise.reject(new Error("No network expected in this test.")),
       },
     );
     return (body: unknown, ip = "203.0.113.7") =>

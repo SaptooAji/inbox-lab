@@ -11,6 +11,7 @@ export function getContainer(): Container {
     buildOutputDirectory: join(process.cwd(), "dist", "emails"),
     clock: new SystemClock(),
     write: (line) => console.log(line),
+    fetch: (url, init) => fetch(url, init),
   });
   return instance;
 }
