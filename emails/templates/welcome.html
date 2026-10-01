@@ -6,176 +6,7 @@
   xmlns:o="urn:schemas-microsoft-com:office:office"
 >
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="x-apple-disable-message-reformatting" />
-    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="supported-color-schemes" content="light dark" />
-    <title>Welcome to NusaFlow</title>
-    <!--[if mso]>
-      <noscript
-        ><xml
-          ><o:OfficeDocumentSettings
-            ><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings
-          ></xml
-        ></noscript
-      >
-    <![endif]-->
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        background-color: [[color.surface]];
-      }
-      table,
-      td {
-        border-collapse: collapse;
-        mso-table-lspace: 0pt;
-        mso-table-rspace: 0pt;
-      }
-      .page {
-        background-color: [[color.surface]];
-      }
-      .card {
-        background-color: [[color.bg]];
-        border-radius: 8px;
-      }
-      .text {
-        margin: 0;
-        font-family: [[font.family]];
-        font-size: [[font.size.body]];
-        line-height: [[font.lineHeight]];
-        color: [[color.text]];
-      }
-      .h1 {
-        margin: 0;
-        font-family: [[font.family]];
-        font-size: [[font.size.h1]];
-        line-height: 1.25;
-        font-weight: bold;
-        color: [[color.text]];
-      }
-      .h2 {
-        margin: 0;
-        font-family: [[font.family]];
-        font-size: [[font.size.h2]];
-        line-height: 1.3;
-        font-weight: bold;
-        color: [[color.text]];
-      }
-      .muted {
-        font-family: [[font.family]];
-        font-size: [[font.size.small]];
-        line-height: [[font.lineHeight]];
-        color: [[color.muted]];
-      }
-      .link {
-        color: [[color.link]];
-        text-decoration: underline;
-      }
-      .wordmark {
-        font-size: 20px;
-        font-weight: bold;
-      }
-      .step-badge {
-        background-color: [[color.primary]];
-        color: [[color.onPrimary]];
-        border-radius: 16px;
-        font-family: [[font.family]];
-        font-size: 16px;
-        font-weight: bold;
-      }
-      .button-cell {
-        background-color: [[color.primary]];
-      }
-      .button-link {
-        display: inline-block;
-        padding: 0 28px;
-        background-color: [[color.primary]];
-        color: [[color.onPrimary]];
-        font-family: [[font.family]];
-        font-size: 16px;
-        font-weight: bold;
-        line-height: 48px;
-        text-decoration: none;
-        border-radius: 6px;
-      }
-
-      @media (max-width: 480px) {
-        .px {
-          padding-left: 20px !important;
-          padding-right: 20px !important;
-        }
-        .h1 {
-          font-size: 24px !important;
-        }
-        .button-link {
-          display: block !important;
-          text-align: center !important;
-        }
-      }
-
-      @media (prefers-color-scheme: dark) {
-        body,
-        .page {
-          background-color: [[dark.color.bg]] !important;
-        }
-        .card {
-          background-color: [[dark.color.surface]] !important;
-        }
-        .text,
-        .h1,
-        .h2 {
-          color: [[dark.color.text]] !important;
-        }
-        .muted {
-          color: [[dark.color.muted]] !important;
-        }
-        .link {
-          color: [[dark.color.link]] !important;
-        }
-        .step-badge,
-        .button-cell,
-        .button-link {
-          background-color: [[dark.color.accent]] !important;
-        }
-        .step-badge,
-        .button-link {
-          color: [[dark.color.onAccent]] !important;
-        }
-      }
-    </style>
-    <style data-embed>
-      [data-ogsb] .page {
-        background-color: [[dark.color.bg]] !important;
-      }
-      [data-ogsb] .card {
-        background-color: [[dark.color.surface]] !important;
-      }
-      [data-ogsb] .step-badge,
-      [data-ogsb] .button-cell,
-      [data-ogsb] .button-link {
-        background-color: [[dark.color.accent]] !important;
-      }
-      [data-ogsc] .text,
-      [data-ogsc] .h1,
-      [data-ogsc] .h2 {
-        color: [[dark.color.text]] !important;
-      }
-      [data-ogsc] .muted {
-        color: [[dark.color.muted]] !important;
-      }
-      [data-ogsc] .link {
-        color: [[dark.color.link]] !important;
-      }
-      [data-ogsc] .step-badge,
-      [data-ogsc] .button-link {
-        color: [[dark.color.onAccent]] !important;
-      }
-    </style>
+    <!--@include head title="Welcome to NusaFlow"-->
   </head>
   <body class="page">
     <!--@include preheader text="Your NusaFlow workspace is ready. Here is how to get started in three steps."-->
@@ -190,20 +21,20 @@
             border="0"
             style="width: 100%; max-width: [[layout.width]]px"
           >
-            <!--@include header-->
+            <!--@include header name="NusaFlow" suffix="by WDNusantara"-->
             <tr>
               <td class="card">
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                   <!--@include hero title="Welcome aboard, {{firstName}}" intro="Your NusaFlow workspace is ready. NusaFlow keeps client projects, updates and invoices in one calm place. Here is how to get started."-->
-                  <!--@include step number="1" title="Create your first project" text="Add a name, a deadline and the people involved."-->
-                  <!--@include step number="2" title="Invite your team" text="Clients and teammates get their own view, so nobody has to forward emails."-->
-                  <!--@include step number="3" title="Connect billing" text="Send invoices from the same place you track the work."-->
+                  <!--@include list-item badge="1" title="Create your first project" text="Add a name, a deadline and the people involved."-->
+                  <!--@include list-item badge="2" title="Invite your team" text="Clients and teammates get their own view, so nobody has to forward emails."-->
+                  <!--@include list-item badge="3" title="Connect billing" text="Send invoices from the same place you track the work."-->
                   <!--@include button href="https://wdnusantara.my.id" label="Open your workspace" width="220"-->
                   <!--@include content-block heading="Need a hand?" body="Just reply to this email. We are happy to help you get set up."-->
                 </table>
               </td>
             </tr>
-            <!--@include footer-->
+            <!--@include footer note="NusaFlow is a fictional product made by WDNusantara for this portfolio."-->
           </table>
         </td>
       </tr>
