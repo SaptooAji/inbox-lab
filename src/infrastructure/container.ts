@@ -19,8 +19,7 @@ import { JsonLogger } from "./logging/json-logger";
 import { InMemoryRateLimiter } from "./rate-limit/in-memory-rate-limiter";
 import { UpstashRateLimiter } from "./rate-limit/upstash-rate-limiter";
 import { HmacIdentityHasher } from "./security/hmac-identity-hasher";
-import { FileSystemTemplateRepository } from "./templates/file-system-template-repository";
-import { MergeTagRenderer } from "./templates/merge-tag-renderer";
+import { createTemplateServices } from "./template-services";
 
 export interface Container {
   readonly sendTestEmail: SendTestEmail;
@@ -89,23 +88,22 @@ function createEventPublisher(config: AppConfig, options: ContainerOptions): Eve
 /** The only place that decides which adapter implements which port. */
 export function createContainer(config: AppConfig, options: ContainerOptions): Container {
   const logger = new JsonLogger(config.logLevel, options.clock, options.write);
-  const templates = new FileSystemTemplateRepository(options.buildOutputDirectory);
-  const renderer = new MergeTagRenderer();
+  const templateServices = createTemplateServices(options.buildOutputDirectory);
 
   return {
     sendTestEmail: new SendTestEmail({
       botVerifier: createBotVerifier(config, options),
       rateLimiter: createRateLimiter(config, options),
-      templates,
-      renderer,
+      templates: templateServices.repository,
+      renderer: templateServices.renderer,
       sender: createEmailSender(config, options, logger),
       events: createEventPublisher(config, options),
       hasher: new HmacIdentityHasher(config.identityHashSalt),
       logger,
       policy: config.policy,
     }),
-    listTemplates: new ListTemplates(templates),
-    getTemplate: new GetTemplate(templates, renderer),
+    listTemplates: templateServices.listTemplates,
+    getTemplate: templateServices.getTemplate,
     logger,
   };
 }

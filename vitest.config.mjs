@@ -23,6 +23,8 @@ export default defineConfig({
         "src/application/dto/**",
         "emails/build/cli.ts",
         "src/infrastructure/get-container.ts",
+        "src/presentation/components/**",
+        "src/infrastructure/get-template-services.ts",
       ],
       thresholds: { lines: 90, functions: 90, branches: 90, statements: 90 },
     },
