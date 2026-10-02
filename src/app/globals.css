@@ -10,6 +10,7 @@
   --link: #0b6b61;
   --border: #d5cdbc;
   --control: #6b7370;
+  --error: #b3261e;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,6 +24,7 @@
     --link: #6fd6c8;
     --border: #2c3a36;
     --control: #7c8884;
+    --error: #ff8a80;
   }
 }
 
@@ -36,6 +38,7 @@
   --color-link: var(--link);
   --color-border: var(--border);
   --color-control: var(--control);
+  --color-error: var(--error);
   --font-sans: Arial, Helvetica, sans-serif;
 }
 

@@ -26,12 +26,13 @@ const VIEW_OPTIONS: readonly { value: View; label: string }[] = [
   { value: "text", label: "Plain text" },
 ];
 
-export function TemplateExplorer({
-  templates,
-}: {
+export interface TemplateExplorerProps {
   readonly templates: readonly TemplateSummary[];
-}) {
-  const [selectedId, setSelectedId] = useState(templates[0]?.id ?? "");
+  readonly selectedId: string;
+  readonly onSelect: (id: string) => void;
+}
+
+export function TemplateExplorer({ templates, selectedId, onSelect }: TemplateExplorerProps) {
   const [device, setDevice] = useState<Device>("desktop");
   const [scheme, setScheme] = useState<Scheme>("light");
   const [view, setView] = useState<View>("email");
@@ -62,7 +63,7 @@ export function TemplateExplorer({
                 name="template"
                 value={template.id}
                 checked={template.id === selected.id}
-                onChange={() => setSelectedId(template.id)}
+                onChange={() => onSelect(template.id)}
                 className="sr-only"
               />
               <span className="block font-semibold">{template.name}</span>

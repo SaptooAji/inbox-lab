@@ -25,6 +25,7 @@ export default defineConfig({
         "src/infrastructure/get-container.ts",
         "src/presentation/components/**",
         "src/infrastructure/get-template-services.ts",
+        "src/infrastructure/get-public-config.ts",
       ],
       thresholds: { lines: 90, functions: 90, branches: 90, statements: 90 },
     },

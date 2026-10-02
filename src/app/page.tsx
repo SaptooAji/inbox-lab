@@ -1,8 +1,10 @@
+import { getPublicConfig } from "@/infrastructure/get-public-config";
 import { getTemplateServices } from "@/infrastructure/get-template-services";
-import { TemplateExplorer } from "@/presentation/components/template-explorer/template-explorer";
+import { InboxLab } from "@/presentation/components/inbox-lab/inbox-lab";
 
 export default async function HomePage() {
   const templates = await getTemplateServices().listTemplates.execute();
+  const { turnstileSiteKey } = getPublicConfig();
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
@@ -15,17 +17,7 @@ export default async function HomePage() {
         </p>
       </header>
 
-      <section aria-labelledby="templates-heading" className="mt-10">
-        <h2 id="templates-heading" className="text-2xl font-semibold">
-          Email templates
-        </h2>
-        <p className="mt-2 text-muted">
-          Pick a template, then check it on desktop and mobile, in light and dark.
-        </p>
-        <div className="mt-6">
-          <TemplateExplorer templates={templates} />
-        </div>
-      </section>
+      <InboxLab templates={templates} turnstileSiteKey={turnstileSiteKey} />
     </main>
   );
 }
