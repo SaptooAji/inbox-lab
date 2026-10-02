@@ -16,8 +16,8 @@ export function InboxLab({ templates, turnstileSiteKey }: InboxLabProps) {
   const selected = templates.find((template) => template.id === selectedId) ?? templates[0];
 
   return (
-    <>
-      <section aria-labelledby="templates-heading" className="mt-10">
+    <div className="mt-10 flex flex-col gap-12 xl:flex-row xl:items-start xl:gap-10">
+      <section aria-labelledby="templates-heading" className="min-w-0 xl:flex-1">
         <h2 id="templates-heading" className="text-2xl font-semibold">
           Email templates
         </h2>
@@ -34,7 +34,7 @@ export function InboxLab({ templates, turnstileSiteKey }: InboxLabProps) {
       </section>
 
       {selected === undefined ? null : (
-        <section aria-labelledby="send-heading" className="mt-14">
+        <section aria-labelledby="send-heading" className="xl:w-96 xl:shrink-0 sticky top-8">
           <h2 id="send-heading" className="text-2xl font-semibold">
             Send it to your inbox
           </h2>
@@ -52,6 +52,6 @@ export function InboxLab({ templates, turnstileSiteKey }: InboxLabProps) {
           </div>
         </section>
       )}
-    </>
+    </div>
   );
 }

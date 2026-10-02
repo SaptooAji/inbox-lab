@@ -94,34 +94,32 @@ export function SendForm({
         in the section above.
       </p>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <TextField
-          id="send-email"
-          label="Your email address"
-          name="email"
-          type="email"
-          value={values.email}
-          onChange={(value) => update("email", value)}
-          error={fieldErrors.email}
-          hint={undefined}
-          required
-          autoComplete="email"
-          maxLength={254}
-        />
-        <TextField
-          id="send-firstName"
-          label="First name"
-          name="firstName"
-          type="text"
-          value={values.firstName}
-          onChange={(value) => update("firstName", value)}
-          error={fieldErrors.firstName}
-          hint="Used in the greeting, for example Welcome aboard, Rina."
-          required
-          autoComplete="given-name"
-          maxLength={40}
-        />
-      </div>
+      <TextField
+        id="send-email"
+        label="Your email address"
+        name="email"
+        type="email"
+        value={values.email}
+        onChange={(value) => update("email", value)}
+        error={fieldErrors.email}
+        hint={undefined}
+        required
+        autoComplete="email"
+        maxLength={254}
+      />
+      <TextField
+        id="send-firstName"
+        label="First name"
+        name="firstName"
+        type="text"
+        value={values.firstName}
+        onChange={(value) => update("firstName", value)}
+        error={fieldErrors.firstName}
+        hint="Used in the greeting, for example Welcome aboard, Rina."
+        required
+        autoComplete="given-name"
+        maxLength={40}
+      />
 
       <TextField
         id="send-subject"

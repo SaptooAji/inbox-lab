@@ -49,10 +49,10 @@ export function TemplateExplorer({ templates, selectedId, onSelect }: TemplateEx
     : `${selected.name}, ${device} view, ${scheme} theme`;
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)]">
+    <div className="grid gap-6">
       <fieldset className="min-w-0">
         <legend className="mb-2 text-sm font-medium text-muted">Template</legend>
-        <div className="grid gap-3">
+        <div className="grid gap-3 sm:grid-cols-3">
           {templates.map((template) => (
             <label
               key={template.id}
@@ -72,7 +72,6 @@ export function TemplateExplorer({ templates, selectedId, onSelect }: TemplateEx
           ))}
         </div>
       </fieldset>
-
       <div className="min-w-0 space-y-4">
         <div className="flex flex-wrap items-end gap-x-6 gap-y-3">
           <SegmentedControl
