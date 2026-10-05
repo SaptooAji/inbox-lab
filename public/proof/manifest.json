@@ -1,3 +1,84 @@
 {
-  "entries": []
+  "entries": [
+    {
+      "id": "gmail-web-plan-sale-light",
+      "templateId": "plan-sale",
+      "client": "Gmail web",
+      "tool": "Chrome on Windows",
+      "scheme": "light",
+      "date": "2026-10-05",
+      "source": "real",
+      "image": "gmail-web_plan-sale_light.png",
+      "alt": "Plan sale email in Gmail web, light theme: amber offer bar, teal hero with a 25% annual plan offer, three plan cards with Pro highlighted, promo code box, one review, footer links.",
+      "width": 740,
+      "height": 2048
+    },
+    {
+      "id": "gmail-web-plan-sale-dark",
+      "templateId": "plan-sale",
+      "client": "Gmail web",
+      "tool": "Chrome on Windows",
+      "scheme": "dark",
+      "date": "2026-10-05",
+      "source": "real",
+      "image": "gmail-web_plan-sale_dark.png",
+      "alt": "Plan sale email in Gmail web, dark theme: amber offer bar, teal hero with a 25% annual plan offer, three plan cards with Pro highlighted, promo code box, one review, footer links.",
+      "width": 740,
+      "height": 2048
+    },
+    {
+      "id": "outlook-web-plan-sale-light",
+      "templateId": "plan-sale",
+      "client": "Outlook.com web",
+      "tool": "Chrome on Windows",
+      "scheme": "light",
+      "date": "2026-10-05",
+      "source": "real",
+      "image": "outlook-web_plan-sale_light.png",
+      "alt": "Plan sale email in Outlook.com web, light theme: amber offer bar, teal hero with a 25% annual plan offer, three plan cards with Pro highlighted, promo code box, one review, footer links.",
+      "width": 780,
+      "height": 2090,
+      "note": "Outlook.com in the browser. Outlook for Windows (desktop) was not tested."
+    },
+    {
+      "id": "outlook-web-plan-sale-dark",
+      "templateId": "plan-sale",
+      "client": "Outlook.com web",
+      "tool": "Chrome on Windows",
+      "scheme": "dark",
+      "date": "2026-10-05",
+      "source": "real",
+      "image": "outlook-web_plan-sale_dark.png",
+      "alt": "Plan sale email in Outlook.com web, dark theme: amber offer bar, teal hero with a 25% annual plan offer, three plan cards with Pro highlighted, promo code box, one review, footer links.",
+      "width": 780,
+      "height": 2090,
+      "note": "Outlook.com in the browser. Outlook for Windows (desktop) was not tested."
+    },
+    {
+      "id": "gmail-android-plan-sale-light",
+      "templateId": "plan-sale",
+      "client": "Gmail app (Android)",
+      "tool": "Tecno Pova 7 5G",
+      "scheme": "light",
+      "date": "2026-10-05",
+      "source": "real",
+      "image": "gmail-android_plan-sale_light.webp",
+      "alt": "Plan sale email in the Gmail app on Android, light theme, one column: amber offer bar, teal hero with a 25% annual plan offer, key numbers, three stacked plan cards with Pro highlighted, promo code box, one review, footer links.",
+      "width": 753,
+      "height": 7328
+    },
+    {
+      "id": "gmail-android-plan-sale-dark",
+      "templateId": "plan-sale",
+      "client": "Gmail app (Android)",
+      "tool": "Tecno Pova 7 5G",
+      "scheme": "dark",
+      "date": "2026-10-05",
+      "source": "real",
+      "image": "gmail-android_plan-sale_dark.webp",
+      "alt": "Plan sale email in the Gmail app on Android, dark theme, one column: amber offer bar, teal hero with a 25% annual plan offer, key numbers, three stacked plan cards with Pro highlighted, promo code box, one review, footer links.",
+      "width": 753,
+      "height": 7328
+    }
+  ]
 }
