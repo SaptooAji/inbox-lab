@@ -16,21 +16,48 @@
   }
   .card {
     background-color: [[color.bg]];
-    border-radius: 8px;
+    border: 1px solid [[color.border]];
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .hero {
+    background-color: [[color.primary]];
+  }
+  .eyebrow {
+    background-color: [[color.tint]];
+    color: [[color.eyebrow]];
+    border-radius: 999px;
+    font-family: [[font.family]];
+    font-size: [[font.size.eyebrow]];
+    line-height: 16px;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .hero-title {
+    margin: 0;
+    font-family: [[font.family]];
+    font-size: [[font.size.h1]];
+    line-height: 1.2;
+    font-weight: bold;
+    color: [[color.onPrimary]];
+  }
+  .hero-intro {
+    margin: 0;
+    font-family: [[font.family]];
+    font-size: 18px;
+    line-height: 1.6;
+    color: [[color.heroMuted]];
+  }
+  .tile {
+    background-color: [[color.tint]];
+    border-radius: 12px;
   }
   .text {
     margin: 0;
     font-family: [[font.family]];
     font-size: [[font.size.body]];
     line-height: [[font.lineHeight]];
-    color: [[color.text]];
-  }
-  .h1 {
-    margin: 0;
-    font-family: [[font.family]];
-    font-size: [[font.size.h1]];
-    line-height: 1.25;
-    font-weight: bold;
     color: [[color.text]];
   }
   .h2 {
@@ -64,9 +91,9 @@
     font-weight: bold;
   }
   .date-block {
-    background-color: [[color.surface]];
+    background-color: [[color.bg]];
     color: [[color.text]];
-    border-radius: 8px;
+    border-radius: 12px;
     font-family: [[font.family]];
   }
   .button-cell {
@@ -74,15 +101,15 @@
   }
   .button-link {
     display: inline-block;
-    padding: 0 28px;
+    padding: 0 36px;
     background-color: [[color.primary]];
     color: [[color.onPrimary]];
     font-family: [[font.family]];
     font-size: 16px;
     font-weight: bold;
-    line-height: 48px;
+    line-height: 52px;
     text-decoration: none;
-    border-radius: 6px;
+    border-radius: 999px;
   }
 
   @media (max-width: 480px) {
@@ -90,8 +117,11 @@
       padding-left: 20px !important;
       padding-right: 20px !important;
     }
-    .h1 {
-      font-size: 24px !important;
+    .hero-title {
+      font-size: 26px !important;
+    }
+    .hero-intro {
+      font-size: 16px !important;
     }
     .button-link {
       display: block !important;
@@ -106,12 +136,28 @@
     }
     .card {
       background-color: [[dark.color.surface]] !important;
+      border-color: [[dark.color.border]] !important;
+    }
+    .hero {
+      background-color: [[dark.color.primary]] !important;
+    }
+    .tile,
+    .eyebrow {
+      background-color: [[dark.color.tint]] !important;
+    }
+    .eyebrow {
+      color: [[dark.color.eyebrow]] !important;
     }
     .date-block {
       background-color: [[dark.color.bg]] !important;
     }
+    .hero-title {
+      color: [[dark.color.onPrimary]] !important;
+    }
+    .hero-intro {
+      color: [[dark.color.heroMuted]] !important;
+    }
     .text,
-    .h1,
     .h2,
     .date-block {
       color: [[dark.color.text]] !important;
@@ -140,6 +186,10 @@
   [data-ogsb] .card {
     background-color: [[dark.color.surface]] !important;
   }
+  [data-ogsb] .tile,
+  [data-ogsb] .eyebrow {
+    background-color: [[dark.color.tint]] !important;
+  }
   [data-ogsb] .date-block {
     background-color: [[dark.color.bg]] !important;
   }
@@ -148,8 +198,16 @@
   [data-ogsb] .button-link {
     background-color: [[dark.color.accent]] !important;
   }
+  [data-ogsc] .hero-title {
+    color: [[dark.color.onPrimary]] !important;
+  }
+  [data-ogsc] .hero-intro {
+    color: [[dark.color.heroMuted]] !important;
+  }
+  [data-ogsc] .eyebrow {
+    color: [[dark.color.eyebrow]] !important;
+  }
   [data-ogsc] .text,
-  [data-ogsc] .h1,
   [data-ogsc] .h2,
   [data-ogsc] .date-block {
     color: [[dark.color.text]] !important;
