@@ -1,3 +1,4 @@
+import { TEMPLATE_IDS } from "../../src/domain/value-objects/template-id";
 import { expect, test, type Page } from "@playwright/test";
 
 function templateGroup(page: Page) {
@@ -22,10 +23,10 @@ test.describe("template explorer", () => {
     await page.goto("/");
   });
 
-  test("offers three templates and selects the first one", async ({ page }) => {
+  test("offers every template and selects the first one", async ({ page }) => {
     const radios = templateGroup(page).getByRole("radio");
 
-    await expect(radios).toHaveCount(3);
+    await expect(radios).toHaveCount(TEMPLATE_IDS.length);
     await expect(radios.first()).toBeChecked();
   });
 

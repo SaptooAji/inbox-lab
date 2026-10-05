@@ -35,6 +35,10 @@ const PAIRS: [string, string][] = [
   ["link", "tint"],
   ["eyebrow", "tint"],
   ["heroMuted", "primary"],
+  // Marketing templates: star ratings sit on the card, the page and tinted tiles.
+  ["star", "bg"],
+  ["star", "surface"],
+  ["star", "tint"],
 ];
 
 describe.each([

@@ -166,7 +166,7 @@ inbox-lab/
 ├─ emails/                         (email design system, see section 5)
 │  ├─ tokens/                      tokens.json
 │  ├─ components/                  one .html partial per component
-│  ├─ templates/                   welcome.html/.json  community-digest.html/.json  win-back.html/.json
+│  ├─ templates/                   welcome  community-digest  win-back  plan-sale  feature-reviews  topic-digest  (each .html and .json)
 │  └─ build/                       create-pipeline.ts  merge-tags.ts  cli.ts  steps/  lint/
 ├─ dist/emails/                    (generated, git-ignored)
 ├─ public/                         email images (served via absolute URLs); proof/ holds manifest.json and the screenshots
@@ -790,6 +790,8 @@ Check items off as they ship. Order matters more than dates.
 - [x] Tokens, components, build pipeline and lint rules
 - [x] Template A `welcome`
 - [x] Templates B `community-digest` and C `win-back`, with dark mode
+- [x] Marketing templates D `plan-sale`, E `feature-reviews` and F `topic-digest`: announcement bar, nav, plan cards, promo code, rating summary, review cards, article cards, marketing footer
+- [ ] Visual assets: original illustrations (hero art, product visuals, icons) hosted on the site, with alt text, dark-mode variants and the image-budget lint rule (`ImageWeightRule`) brought back
 
 **Phase 3: Infrastructure and delivery**
 

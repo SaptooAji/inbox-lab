@@ -1,7 +1,14 @@
 import { ValidationError } from "../errors/validation-error";
 import { err, ok, type Result } from "../result";
 
-export const TEMPLATE_IDS = ["welcome", "community-digest", "win-back"] as const;
+export const TEMPLATE_IDS = [
+  "welcome",
+  "community-digest",
+  "win-back",
+  "plan-sale",
+  "feature-reviews",
+  "topic-digest",
+] as const;
 export type TemplateIdValue = (typeof TEMPLATE_IDS)[number];
 
 export class TemplateId {
