@@ -4,19 +4,21 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "predev": "npm run emails:build",
+    "build": "npm run emails:build && next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "arch:check": "depcruise src --config .dependency-cruiser.cjs",
-    "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky",
-    "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
+    "format": "prettier --write . --log-level warn",
+    "test": "vitest run --reporter=dot",
+    "test:coverage": "vitest run --coverage --reporter=dot --coverage.reporter=text-summary",
     "verify": "npm run format:check && npm run typecheck && npm run lint && npm run arch:check && npm run test:coverage",
-    "emails:build": "tsx emails/build/cli.ts"
+    "emails:build": "tsx emails/build/cli.ts",
+    "test:e2e": "playwright test"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -32,8 +34,10 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/html-to-text": "^9.0.4",
     "@types/node": "^24.19.0",

@@ -29,6 +29,12 @@ const PAIRS: [string, string][] = [
   ["onAccent", "accent"],
   ["link", "bg"],
   ["link", "surface"],
+  // Modern redesign: tinted cards, eyebrow pills and the dark hero band.
+  ["text", "tint"],
+  ["muted", "tint"],
+  ["link", "tint"],
+  ["eyebrow", "tint"],
+  ["heroMuted", "primary"],
 ];
 
 describe.each([

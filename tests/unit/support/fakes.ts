@@ -57,7 +57,9 @@ export class FakeRateLimiter implements RateLimiter {
     this.rules.push(rule);
     const used = (this.counts.get(rule.key) ?? 0) + 1;
     this.counts.set(rule.key, used);
-    return Promise.resolve({ allowed: used <= rule.limit, retryAfterSeconds: rule.windowSeconds });
+
+    const allowed = used <= rule.limit;
+    return Promise.resolve({ allowed, retryAfterSeconds: allowed ? 0 : rule.windowSeconds });
   }
 }
 
