@@ -43,3 +43,6 @@ next-env.d.ts
 
 # Cutom
 /dist
+
+/test-results/
+/playwright-report/

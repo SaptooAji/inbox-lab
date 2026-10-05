@@ -37,8 +37,15 @@ export function PreviewFrame({ src, title, widthPx }: PreviewFrameProps) {
     observer.current.observe(root);
   }
 
+  // The email can be wider than the screen, so this box scrolls sideways. It is a labelled,
+  // focusable region so that keyboard users can reach it and scroll with the arrow keys.
   return (
-    <div className="overflow-x-auto rounded-lg border border-border bg-surface p-2">
+    <div
+      role="region"
+      aria-label="Email preview"
+      tabIndex={0}
+      className="overflow-x-auto rounded-lg border border-border bg-surface p-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+    >
       <iframe
         ref={frame}
         src={src}
