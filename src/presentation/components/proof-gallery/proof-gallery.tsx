@@ -1,12 +1,7 @@
-import Image from "next/image";
 import type { ProofEntry } from "@/application/dto/proof.dto";
 import type { TemplateSummary } from "@/application/dto/template.dto";
-import {
-  groupProofByTemplate,
-  proofCaption,
-  proofSummary,
-  sourceLabel,
-} from "@/presentation/proof/proof-view";
+import { groupProofByClient, proofSummary } from "@/presentation/proof/proof-view";
+import { ProofTemplateBlock } from "./proof-template-block";
 
 export interface ProofGalleryProps {
   readonly entries: readonly ProofEntry[];
@@ -29,32 +24,15 @@ export function ProofGallery({ entries, templates }: ProofGalleryProps) {
         and device or tool, which theme, which day, and whether it is a real render or a simulation.{" "}
         {proofSummary(entries)}.
       </p>
-      {groupProofByTemplate(entries).map((group) => (
-        <div key={group.templateId} className="mt-8">
-          <h3 className="text-lg font-semibold">
-            {templates.find((template) => template.id === group.templateId)?.name ??
-              group.templateId}
-          </h3>
-          <div className="mt-4 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {group.entries.map((entry) => (
-              <figure key={entry.id} className="min-w-0">
-                <Image
-                  src={`/proof/${entry.image}`}
-                  alt={entry.alt}
-                  width={entry.width}
-                  height={entry.height}
-                  sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  className="h-auto w-full rounded-md border border-border"
-                />
-                <figcaption className="mt-2 text-sm text-muted">
-                  <span className="font-medium text-text">{sourceLabel(entry.source)}.</span>{" "}
-                  {proofCaption(entry)}
-                  {entry.note === undefined ? "" : `. ${entry.note}`}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
+      {groupProofByClient(entries).map((group) => (
+        <ProofTemplateBlock
+          key={group.templateId}
+          templateId={group.templateId}
+          templateName={
+            templates.find((template) => template.id === group.templateId)?.name ?? group.templateId
+          }
+          clients={group.clients}
+        />
       ))}
     </section>
   );

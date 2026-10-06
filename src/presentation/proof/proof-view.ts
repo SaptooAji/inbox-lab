@@ -1,9 +1,16 @@
 import type { ProofEntry, ProofSource } from "@/application/dto/proof.dto";
 import { TEMPLATE_IDS } from "@/domain/value-objects/template-id";
 
-export interface ProofGroup {
+/** One client of one template: its light and dark screenshot, either of which may be missing. */
+export interface ProofClientGroup {
+  readonly client: string;
+  readonly light: ProofEntry | undefined;
+  readonly dark: ProofEntry | undefined;
+}
+
+export interface ProofTemplateGroup {
   readonly templateId: string;
-  readonly entries: readonly ProofEntry[];
+  readonly clients: readonly ProofClientGroup[];
 }
 
 export function sourceLabel(source: ProofSource): string {
@@ -43,10 +50,20 @@ export function proofSummary(entries: readonly ProofEntry[]): string {
   return `${plural(entries.length, "screenshot", "screenshots")}: ${parts.join(", ")}`;
 }
 
-/** Groups in template order; templates without screenshots are left out. */
-export function groupProofByTemplate(entries: readonly ProofEntry[]): readonly ProofGroup[] {
-  return TEMPLATE_IDS.map((templateId) => ({
-    templateId,
-    entries: entries.filter((entry) => entry.templateId === templateId),
-  })).filter((group) => group.entries.length > 0);
+/**
+ * Template, then client (sorted by name), then the light and dark pair.
+ * The list is newest first, so when a theme appears twice the first entry wins.
+ */
+export function groupProofByClient(entries: readonly ProofEntry[]): readonly ProofTemplateGroup[] {
+  return TEMPLATE_IDS.map((templateId) => {
+    const ofTemplate = entries.filter((entry) => entry.templateId === templateId);
+    const clients = [...new Set(ofTemplate.map((entry) => entry.client))]
+      .sort((a, b) => a.localeCompare(b))
+      .map((client) => ({
+        client,
+        light: ofTemplate.find((entry) => entry.client === client && entry.scheme === "light"),
+        dark: ofTemplate.find((entry) => entry.client === client && entry.scheme === "dark"),
+      }));
+    return { templateId, clients };
+  }).filter((group) => group.clients.length > 0);
 }

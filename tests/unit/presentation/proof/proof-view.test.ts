@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ProofEntry } from "@/application/dto/proof.dto";
-import {
-  groupProofByTemplate,
-  proofCaption,
-  proofSummary,
-  sourceLabel,
-} from "@/presentation/proof/proof-view";
+import { proofCaption, proofSummary, sourceLabel } from "@/presentation/proof/proof-view";
 
 function makeEntry(overrides: Partial<ProofEntry> = {}): ProofEntry {
   return {
@@ -71,22 +66,5 @@ describe("proofSummary", () => {
     ];
 
     expect(proofSummary(entries)).toBe("2 screenshots: 2 simulations");
-  });
-});
-
-describe("groupProofByTemplate", () => {
-  it("returns nothing for an empty list", () => {
-    expect(groupProofByTemplate([])).toEqual([]);
-  });
-
-  it("groups by template, keeps input order inside a group and omits empty templates", () => {
-    const first = makeEntry({ id: "a", templateId: "welcome" });
-    const second = makeEntry({ id: "b", templateId: "win-back" });
-    const third = makeEntry({ id: "c", templateId: "welcome" });
-
-    expect(groupProofByTemplate([first, second, third])).toEqual([
-      { templateId: "welcome", entries: [first, third] },
-      { templateId: "win-back", entries: [second] },
-    ]);
   });
 });
