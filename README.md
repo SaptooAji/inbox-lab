@@ -178,7 +178,7 @@ inbox-lab/
 ├─ docs/
 │  ├─ PRD_Email_Dev_Portfolio.md
 │  ├─ adr/                         0001-...md
-│  ├─ case-studies/                plan-sale.md  (written; the other templates follow once they have real-client proof)
+│  ├─ case-studies/                plan-sale.md  feature-reviews.md  (written; the other templates follow once they have real-client proof)
 │  ├─ qa/                          pre-send-checklist.md  client-matrix.md
 │  └─ iterable-porting.md
 ├─ .github/workflows/ci.yml

@@ -35,8 +35,12 @@ export function ProofTemplateBlock({ templateId, templateName, clients }: ProofT
         />
       </div>
       <div className="mt-4 grid gap-6 sm:grid-cols-2">
-        {current.light === undefined ? null : <ProofFigure entry={current.light} />}
-        {current.dark === undefined ? null : <ProofFigure entry={current.dark} />}
+        {current.light === undefined ? null : (
+          <ProofFigure entry={current.light} templateName={templateName} />
+        )}
+        {current.dark === undefined ? null : (
+          <ProofFigure entry={current.dark} templateName={templateName} />
+        )}
       </div>
     </section>
   );

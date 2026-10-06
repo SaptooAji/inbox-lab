@@ -11,10 +11,11 @@ const FADE = "linear-gradient(to bottom, black 78%, transparent)";
 
 export interface ProofFigureProps {
   readonly entry: ProofEntry;
+  readonly templateName: string;
 }
 
 /** A short top-aligned peek of the screenshot. The whole email opens in a native dialog. */
-export function ProofFigure({ entry }: ProofFigureProps) {
+export function ProofFigure({ entry, templateName }: ProofFigureProps) {
   const [open, setOpen] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const opener = useRef<HTMLButtonElement>(null);
@@ -66,7 +67,7 @@ export function ProofFigure({ entry }: ProofFigureProps) {
         <button
           ref={opener}
           type="button"
-          aria-label={`View full email, ${entry.client}, ${entry.scheme} theme`}
+          aria-label={`View full email, ${templateName}, ${entry.client}, ${entry.scheme} theme`}
           onClick={() => setOpen(true)}
           className={`mt-3 rounded-md border border-control px-3 py-1.5 text-sm font-medium ${FOCUS_RING}`}
         >
@@ -76,7 +77,7 @@ export function ProofFigure({ entry }: ProofFigureProps) {
 
       <dialog
         ref={dialog}
-        aria-label={caption}
+        aria-label={`${templateName}: ${caption}`}
         onClose={handleClose}
         onClick={handleBackdropClick}
         className="m-auto w-[min(48rem,calc(100vw-2rem))] rounded-lg border border-border bg-surface p-0 text-text backdrop:bg-black/60"

@@ -79,6 +79,58 @@
       "alt": "Plan sale email in the Gmail app on Android, dark theme, one column: amber offer bar, teal hero with a 25% annual plan offer, key numbers, three stacked plan cards with Pro highlighted, promo code box, one review, footer links.",
       "width": 753,
       "height": 7328
+    },
+    {
+      "id": "gmail-web-feature-reviews-light",
+      "templateId": "feature-reviews",
+      "client": "Gmail web",
+      "tool": "Chrome on Windows",
+      "scheme": "light",
+      "date": "2026-10-06",
+      "source": "real",
+      "image": "gmail-web_feature-reviews_light.png",
+      "alt": "Feature reviews email in Gmail web, light theme: teal hero, 4.8 rating summary with bars, three review cards, key numbers, numbered feature tiles, call to action, footer links.",
+      "width": 740,
+      "height": 2453
+    },
+    {
+      "id": "gmail-web-feature-reviews-dark",
+      "templateId": "feature-reviews",
+      "client": "Gmail web",
+      "tool": "Chrome on Windows",
+      "scheme": "dark",
+      "date": "2026-10-06",
+      "source": "real",
+      "image": "gmail-web_feature-reviews_dark.png",
+      "alt": "Feature reviews email in Gmail web, dark theme: teal hero, 4.8 rating summary with bars, three review cards, key numbers, numbered feature tiles, call to action, footer links.",
+      "width": 740,
+      "height": 2453
+    },
+    {
+      "id": "gmail-android-feature-reviews-light",
+      "templateId": "feature-reviews",
+      "client": "Gmail app (Android)",
+      "tool": "Tecno Pova 7 5G",
+      "scheme": "light",
+      "date": "2026-10-06",
+      "source": "real",
+      "image": "gmail-android_feature-reviews_light.webp",
+      "alt": "Feature reviews email in Gmail app (Android), light theme: teal hero, 4.8 rating summary with bars, three review cards, key numbers, numbered feature tiles, call to action, footer links.",
+      "width": 706,
+      "height": 7434
+    },
+    {
+      "id": "gmail-android-feature-reviews-dark",
+      "templateId": "feature-reviews",
+      "client": "Gmail app (Android)",
+      "tool": "Tecno Pova 7 5G",
+      "scheme": "dark",
+      "date": "2026-10-06",
+      "source": "real",
+      "image": "gmail-android_feature-reviews_dark.webp",
+      "alt": "Feature reviews email in Gmail app (Android), dark theme: teal hero, 4.8 rating summary with bars, three review cards, key numbers, numbered feature tiles, call to action, footer links.",
+      "width": 706,
+      "height": 7434
     }
   ]
 }
