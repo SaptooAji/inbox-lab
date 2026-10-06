@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { expect, test, type Page } from "@playwright/test";
+import type { ProofEntry } from "../../src/application/dto/proof.dto";
 import { FileSystemProofRepository } from "../../src/infrastructure/proof/file-system-proof-repository";
 import {
   groupProofByClient,
@@ -21,6 +22,14 @@ function templateName(id: string): string {
     readFileSync(join(ROOT, "emails", "templates", `${id}.json`), "utf8"),
   ) as { name: string };
   return name;
+}
+
+function openerName(entry: ProofEntry): string {
+  return `View full email, ${templateName(entry.templateId)}, ${entry.client}, ${entry.scheme} theme`;
+}
+
+function dialogName(entry: ProofEntry): string {
+  return `${templateName(entry.templateId)}: ${proofCaption(entry)}`;
 }
 
 function block(page: Page, templateId: string) {
@@ -101,13 +110,13 @@ test.describe("proof gallery", () => {
     await page.goto("/");
 
     const opener = page.getByRole("button", {
-      name: `View full email, ${entry.client}, ${entry.scheme} theme`,
+      name: openerName(entry),
       exact: true,
     });
     await opener.focus();
     await page.keyboard.press("Enter");
 
-    const dialog = page.getByRole("dialog", { name: proofCaption(entry) });
+    const dialog = page.getByRole("dialog", { name: dialogName(entry) });
     await expect(dialog).toBeVisible();
     await expect(dialog.getByRole("img", { name: entry.alt, exact: true })).toBeVisible();
 
@@ -126,12 +135,12 @@ test.describe("proof gallery", () => {
     await page.goto("/");
     await page
       .getByRole("button", {
-        name: `View full email, ${entry.client}, ${entry.scheme} theme`,
+        name: openerName(entry),
         exact: true,
       })
       .click();
 
-    const dialog = page.getByRole("dialog", { name: proofCaption(entry) });
+    const dialog = page.getByRole("dialog", { name: dialogName(entry) });
     await dialog.getByRole("button", { name: "Close", exact: true }).click();
 
     await expect(dialog).toBeHidden();
@@ -147,11 +156,11 @@ test.describe("proof gallery", () => {
     await page.goto("/");
     await page
       .getByRole("button", {
-        name: `View full email, ${entry.client}, ${entry.scheme} theme`,
+        name: openerName(entry),
         exact: true,
       })
       .click();
-    await expect(page.getByRole("dialog", { name: proofCaption(entry) })).toBeVisible();
+    await expect(page.getByRole("dialog", { name: dialogName(entry) })).toBeVisible();
 
     expect(await seriousViolations(page, ["iframe"])).toEqual([]);
   });
