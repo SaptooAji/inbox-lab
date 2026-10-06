@@ -178,7 +178,7 @@ inbox-lab/
 ├─ docs/
 │  ├─ PRD_Email_Dev_Portfolio.md
 │  ├─ adr/                         0001-...md
-│  ├─ case-studies/                welcome.md  community-digest.md  win-back.md
+│  ├─ case-studies/                plan-sale.md  (written; the other templates follow once they have real-client proof)
 │  ├─ qa/                          pre-send-checklist.md  client-matrix.md
 │  └─ iterable-porting.md
 ├─ .github/workflows/ci.yml
@@ -605,7 +605,7 @@ Why: a sending subdomain needs mail-related DNS records (MX, TXT, DKIM). Attachi
 
 1. **Find where DNS is managed.** If the domain's nameservers point to Vercel, add records in _Vercel dashboard → Domains → DNS Records_. Otherwise add them at the registrar or DNS host that controls the nameservers.
 2. **Add the sending domain in Resend** as `mail.wdnusantara.my.id`. Resend shows the exact DNS records to create (SPF, DKIM and a return-path entry). Copy them **exactly as displayed**.
-3. **Add a DMARC record** for the domain, starting in monitoring mode, for example a `TXT` record at `_dmarc.wdnusantara.my.id` with `v=DMARC1; p=none; rua=mailto:<your address>`. Tighten the policy (`quarantine`, then `reject`) only after reports look clean.
+3. **Add a DMARC record** for the sending subdomain, starting in monitoring mode: a `TXT` record at `_dmarc.mail` (that is, `_dmarc.mail.wdnusantara.my.id`) with `v=DMARC1; p=none;`. Adding `rua=mailto:<your address>` gets you aggregate reports. Tighten the policy (`quarantine`, then `reject`) only after reports look clean.
 4. **Verify** in Resend, then send test emails to your own Gmail, Outlook.com, iCloud and Yahoo accounts. Check the headers show SPF, DKIM and DMARC as `pass`.
 5. **Add `inbox.wdnusantara.my.id`** to the Vercel project and follow Vercel's DNS instructions.
 6. **Set `EMAIL_FROM`** to a display name and address on the sending domain, for example `WDNusantara <hello@mail.wdnusantara.my.id>`, and set `EMAIL_REPLY_TO` to a mailbox you actually read.
@@ -773,9 +773,9 @@ Check items off as they ship. Order matters more than dates.
 
 **Phase 0: Setup**
 
-- [ ] GitHub repository (public), Vercel project, `inbox.wdnusantara.my.id` attached
-- [ ] Resend domain `mail.wdnusantara.my.id` verified; SPF, DKIM, DMARC passing
-- [ ] Turnstile and Upstash accounts created
+- [x] GitHub repository (public), Vercel project, `inbox.wdnusantara.my.id` attached
+- [x] Resend domain `mail.wdnusantara.my.id` verified; SPF, DKIM, DMARC passing
+- [x] Turnstile and Upstash accounts created
 - [x] Project scaffold, strict TypeScript, ESLint, Prettier, Husky, commitlint
 - [x] CI pipeline and architecture check green on an empty project
 
