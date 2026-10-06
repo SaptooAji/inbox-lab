@@ -33,10 +33,14 @@ NusaFlow wants more customers on annual billing. One email, one offer: 25% off a
 
 I sent the email from the live site and captured it in real clients.
 
-- **Gmail on the web (Chrome, Windows):** rendered as designed in light and dark. Gmail applied the email's own dark colors.
+- **Gmail on the web (Chrome, Windows):** rendered correctly in light and dark. In dark mode every client does its own color handling, so details differ between clients. For example, the buttons stay teal in Gmail's dark mode where Outlook.com's dark mode shows the amber ones I defined.
 - **Outlook.com in the browser:** rendered as designed in light and dark, including the rounded corners and pill buttons.
 - **Gmail app on an Android phone (Tecno Pova 7 5G):** this found a real bug. In the key-numbers row, "30 days" broke onto two lines ("30" over "days") because each column is only about 90 px wide at 375 px. I wrote a failing test first: at 375 px, no big number may wrap. Then I made the numbers 20 px on phones. I re-sent the email and re-captured it, and the numbers now sit on one line.
 - **A false alarm:** one Outlook.com light capture looked broken, with a duplicated promo box and a missing review title. It was a seam from stitching my own overlapping screenshots. I retook it as a single capture and the email was fine.
+
+## Limits
+
+- **Inbox placement is unproven.** SPF, DKIM and DMARC all pass, but Outlook.com later moved my test emails to Junk. The sending domain is new and sends only occasional demo mail, so I treat inbox placement as an open question, not a result.
 
 ## Not tested
 
